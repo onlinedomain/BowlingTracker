@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marius — Projet</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="../style.css"/>
+</head>
+
+<body>
+
+  <nav>
+    <a class="nav-logo" href="../index.html">
+      <span><span class="gold">Accueil</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html#projects">Projets</a></li>
+      <li><a href="../index.html#skills">Compétences</a></li>
+      <li><a href="../index.html#academic-path">Parcours</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="../index.html#projects">Projets</a>
+    <a href="../index.html#skills">Compétences</a>
+    <a href="../index.html#academic-path">Parcours</a>
+    <a href="../contact.html">Contact</a>
+  </div>
+
+  <!-- CORPS DU PROJET : sidebar + contenu côte à côte -->
+  <div class="proj-body">
+
+    <!-- SIDEBAR -->
+    <!--
+      AJOUTER UNE PAGE :
+      1. Copie un .sidebar-link ci-dessous, change onclick="showPage('mon-id', this)", l'icône et le texte
+      2. Ajoute un div.page id="page-mon-id" dans .content-inner
+    -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <span class="sidebar-label">Sections</span>
+        <button class="pin-btn" id="pinBtn" onclick="togglePin()" aria-label="Épingler la barre">
+          <i class="ti ti-pin"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-link active" onclick="showPage('intro', this)">
+        <i class="ti ti-location-pin"></i><span>Introduction</span>
+      </div>
+      <div class="sidebar-link" onclick="showPage('acp', this)">
+        <i class="ti ti-chart-dots"></i><span>ACP</span>
+      </div>
+      <div class="sidebar-link" onclick="showPage('afc', this)">
+        <i class="ti ti-chart-bar"></i><span>AFC</span>
+      </div>
+    </aside>
+
+    <!-- COLONNE CONTENU -->
+    <div class="content-col">
+      <main class="content-inner">
+
+        <a class="back-link" href="../index.html#projects">← Retour aux projets</a>
+
+        <!-- PAGE INTRO -->
+        <div class="page active" id="page-intro">
+
+              <span class="article-tag">// 01 — Introduction</span>
+              <h1 class="article-title">Titre du projet</h1>
+              <div class="article-meta">
+                <div class="meta-item"><span>Date</span>10/06/2026</div>
+                <div class="meta-item"><span>Contexte</span>Projet scolaire</div>
+                <div class="meta-item"><span>Matière</span>Modélisation et Simulation Numérique</div>
+              </div>
+              <div class="article-body">
+                <p>Introduction du projet, contexte et objectifs.</p>
+              </div>
+
+        </div>
+
+        <!-- PAGE ACP — COPIE CE BLOC POUR AJOUTER UNE PAGE -->
+        <div class="page" id="page-acp">
+          <span class="article-tag">// 02 — Analyse</span>
+          <h1 class="article-title">ACP</h1>
+          <div class="article-body">
+            <p>On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).</p>
+            <img class="article-img" src="plots_acp.jpg" alt="Graphique ACP"/>
+            <p class="img-caption">Légende de l'image</p>
+          </div>
+        </div>
+
+        <!-- PAGE AFC -->
+        <div class="page" id="page-afc">
+          <span class="article-tag">// 03 — Analyse</span>
+          <h1 class="article-title">AFC</h1>
+          <div class="article-body">
+            <p>Contenu de la page AFC.</p>
+            <img class="article-img" src="image-afc.jpg" alt="Graphique AFC"/>
+            <p class="img-caption">Légende de l'image</p>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="proj-footer">
+        <span class="sk-card-title">© 2026 Marius COISSARD</span>
+      </footer>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Navbar burger ──
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    burger.addEventListener('click', function() {
+      burger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        burger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // ── Navigation entre pages ──
+    function showPage(id, link) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+
+    // ── Épinglage de la sidebar ──
+    function togglePin() {
+      const sidebar = document.getElementById('sidebar');
+      const btn = document.getElementById('pinBtn');
+      sidebar.classList.toggle('pinned');
+      // change l'icône pin / pin barré
+      const icon = btn.querySelector('i');
+      if (sidebar.classList.contains('pinned')) {
+        icon.className = 'ti ti-pinned-off';
+      } else {
+        icon.className = 'ti ti-pin';
+      }
+    }
+  </script>
+
+</body>
+</html>

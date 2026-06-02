@@ -211,7 +211,8 @@ nav::after{
     padding: 0 4rem;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px;
+    padding-bottom: 50px;
+    padding-top: 50px;
 }
 
 .content-section::after {
@@ -267,9 +268,9 @@ nav::after{
 /* Responsive paddings pour mobile */
 @media (max-width: 768px) {
     nav { padding: 0 1.5rem; }
-    .content-section { padding: 0 1.5rem; }
+    .content-section { padding: 1rem; }
 }
-/* Fin Responsive paddings pour mobile */
+/* _________________________________ Fin Responsive paddings pour mobile _________________________________ */
 
 /* ##################################### Cartes projets ##################################### */
 .project-grid {
@@ -388,9 +389,8 @@ nav::after{
   background: rgba(184,122,232,.05);
 }
 
-/* Fin Cartes projets */
+/* _________________________________ Fin Cartes projets _________________________________ */
 
-/* Cartes Compétences */
 /* ##################################### Cartes Compétences ##################################### */
 .sk-grid {
     display: grid;
@@ -459,7 +459,7 @@ nav::after{
   color: var(--gold);
 }
 
-/* Fin Cartes Compétences */
+/* _________________________________ Fin Cartes Compétences _________________________________ */
 
 /* ##################################### Cadre parcours ##################################### */
 .parcours-grid {
@@ -661,4 +661,259 @@ nav::after{
     display: block;
   }
 }
-/* Fin adaptation navbar mobile */
+/* _________________________________ Fin adaptation navbar mobile _________________________________ */
+
+
+/* ################################ CSS pages projets ################################ */
+/* ── Corps projet ── */
+.proj-body {
+  display: flex;
+  min-height: calc(100vh - 82px);
+  margin-top: 82px;
+}
+
+/* SIDEBAR */
+.sidebar { 
+  position: sticky;
+  top: 82px;
+  align-self: flex-start;
+  width: 60px;
+  flex-shrink: 0;
+  background: #0e0e14;
+  border-right: 1px solid var(--border);
+  transition: width .35s ease;
+  overflow: hidden;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.sidebar:hover,
+.sidebar.pinned { width: 210px; }
+
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.1rem .6rem;
+  white-space: nowrap;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,.4);
+  opacity: 0;
+  transition: opacity .2s .1s;
+}
+
+.sidebar:hover .sidebar-label,
+.sidebar.pinned .sidebar-label { opacity: 1; }
+
+.pin-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: .2rem;
+  display: flex;
+  opacity: 0;
+  transition: opacity .2s .1s, color .2s;
+}
+
+.sidebar:hover .pin-btn,
+.sidebar.pinned .pin-btn { opacity: 1; }
+
+.pin-btn:hover { color: var(--gold); }
+.sidebar.pinned .pin-btn { color: var(--gold); }
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  padding: .7rem 1.1rem;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: border-color .2s, background .2s;
+  white-space: nowrap;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: rgba(201,168,76,.05);
+  border-left-color: var(--gold);
+}
+
+.sidebar-link i {
+  font-size: 1.15rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+  transition: color .2s;
+}
+
+.sidebar-link:hover i,
+.sidebar-link.active i { color: var(--gold); }
+
+.sidebar-link span {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity .2s .1s, color .2s;
+}
+
+.sidebar:hover .sidebar-link span,
+.sidebar.pinned .sidebar-link span { opacity: 1; }
+.sidebar-link.active span { color: var(--gold); }
+
+/* COLONNE CONTENU */
+.content-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-inner {
+  flex: 1;
+  padding: 2.5rem 3rem;
+  max-width: 1000px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.proj-footer {
+  padding: 1.5rem 3rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: .75rem;
+  color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .proj-body { flex-direction: column; }
+  .sidebar {
+    position: sticky;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: .5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar:hover { width: 100%; }
+  .sidebar-head { display: none; }
+  .sidebar-link span { opacity: 1; }
+  .content-inner { padding: 2rem 1.5rem; }
+}
+
+.article-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 120px 2rem 4rem;
+}
+
+.article-tag {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.article-title {
+  font-family: var(--title);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.article-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.meta-item {
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--muted);
+}
+
+.meta-item span {
+  color: var(--gold);
+  display: block;
+  margin-bottom: .2rem;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.article-img {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.img-caption {
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.article-body {
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.8;
+}
+
+.article-body p {
+  margin-bottom: 1.25rem;
+}
+
+.article-body h2 {
+  font-family: var(--title);
+  font-size: 1.3rem;
+  color: var(--white);
+  margin: 2rem 0 .75rem;
+}
+
+.back-link {
+  font-family: var(--mono);
+  font-size: .75rem;
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 3rem;
+  transition: gap .25s;
+}
+
+.back-link:hover {
+  gap: .85rem;
+}
+/* _________________________________ Fin CSS pages projets _________________________________ */
+
+
