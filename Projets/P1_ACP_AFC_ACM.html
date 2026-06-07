@@ -3,10 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Marius — Projet</title>
 
+  <title>Projet ACP AFC ACM</title>
+
+  <!-- Source pour la coloration de mots clés dans les codes -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+
+  <!-- Source pour pouvoir écrire les formules mathématiques en Latex -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <!-- Source pour les polices d'écriture -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  
+  <!-- Source pour les icons -->
   <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet"/>
+
+  <!-- Source vers le CSS -->
   <link rel="stylesheet" href="../style.css"/>
 </head>
 
@@ -34,15 +48,13 @@
     <a href="../contact.html">Contact</a>
   </div>
 
+
+
+
   <!-- CORPS DU PROJET : sidebar + contenu côte à côte -->
   <div class="proj-body">
 
     <!-- SIDEBAR -->
-    <!--
-      AJOUTER UNE PAGE :
-      1. Copie un .sidebar-link ci-dessous, change onclick="showPage('mon-id', this)", l'icône et le texte
-      2. Ajoute un div.page id="page-mon-id" dans .content-inner
-    -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-head">
         <span class="sidebar-label">Sections</span>
@@ -51,14 +63,17 @@
         </button>
       </div>
 
-      <div class="sidebar-link active" onclick="showPage('intro', this)">
-        <i class="ti ti-location-pin"></i><span>Introduction</span>
+      <div class="sidebar-link active" onclick="showPage('intro')" id="sidebar-link-intro">
+        <i class="ti ti-home"></i><span>Introduction</span>
       </div>
-      <div class="sidebar-link" onclick="showPage('acp', this)">
+      <div class="sidebar-link" onclick="showPage('acp')" id="sidebar-link-acp">
         <i class="ti ti-chart-dots"></i><span>ACP</span>
       </div>
-      <div class="sidebar-link" onclick="showPage('afc', this)">
-        <i class="ti ti-chart-bar"></i><span>AFC</span>
+      <div class="sidebar-link" onclick="showPage('afc')" id="sidebar-link-afc">
+        <i class="ti ti-table-off"></i><span>AFC</span>
+      </div>
+      <div class="sidebar-link" onclick="showPage('acm')" id="sidebar-link-acm">
+        <i class="ti ti-schema"></i><span>ACM</span>
       </div>
     </aside>
 
@@ -68,49 +83,351 @@
 
         <a class="back-link" href="../index.html#projects">← Retour aux projets</a>
 
+
+
+
+
+
         <!-- PAGE INTRO -->
         <div class="page active" id="page-intro">
 
               <span class="article-tag">// 01 — Introduction</span>
               <h1 class="article-title">Analyse de données</h1>
               <div class="article-meta">
-                <div class="meta-item"><span>Date</span>10/06/2026</div>
-                <div class="meta-item"><span>Contexte</span>Projet scolaire</div>
+                <div class="meta-item"><span>Date</span>06/2026</div>
+                <div class="meta-item"><span>Contexte</span>Projet Individuel</div>
                 <div class="meta-item"><span>Matière</span>Modélisation et Simulation Numérique</div>
               </div>
               <div class="article-body">
-                <p>Introduction du projet, contexte et objectifs.</p>
-              </div>
 
+
+                <p>
+                  Les méthodes d'analyses de données telles que l'ACP, l'AFC ou encore l'ACM sont assez intimidantes au premier regard. Ce projet est né d'une envie de démystifier
+                  ces concepts en les appliquant à des situations concrètes. J'ai découvert au fil du projet que la majorité des mathématiques derrière ces méthodes 
+                  sont accessibles et compréhensibles. J'essaye donc ici de présenter ce que j'ai découvert avec ces méthodes de manière vulgarisée, sans sacrifier la 
+                  rigueur scientifique.
+                </p>
+                <p class="sidebar-link" onclick="showPage('acp')">
+                  <i class="ti ti-arrow-right"></i> L'ACP (Analyse en Composantes Multiples)
+                </p>
+                <p class="sidebar-link" onclick="showPage('afc')">
+                  <i class="ti ti-arrow-right"></i> L'AFC (Analyse Factorielle des Correspondances)
+                </p>
+                <p class="sidebar-link" onclick="showPage('acm')">
+                  <i class="ti ti-arrow-right"></i> L'ACP (Analyse des Correspondances Multiples)
+                </p>
+
+              </div>
         </div>
+
+
+
+
 
         <!-- PAGE ACP — COPIE CE BLOC POUR AJOUTER UNE PAGE -->
         <div class="page" id="page-acp">
-          <span class="article-tag">// 02 — Analyse</span>
+          <span class="article-tag">// 02 — Analyse de données</span>
           <h1 class="article-title">ACP</h1>
           <div class="article-body">
-            <p>On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).</p>
-            <img class="article-img" src="plots_acp.jpg" alt="Graphique ACP"/>
-            <p class="img-caption">Légende de l'image</p>
+
+
+            <p>
+              L'objectif de l'analyse en composantes principales (ou ACP) est de pouvoir rendre plus "évident" des liens entre plusieurs individus par rapport
+              à plusieurs caractéristiques. Cette méthode est souvent vue comme permettant l'étude des ressemblances. 
+            </p>
+
+            <div class="example-block">
+              <p>
+                Imaginez que vous avez interrogé une centaine de personnes sur leurs caractéristiques 
+                personnelles : poids, taille, âge, salaire annuel, niveau d'études, nombre d'enfants, 
+                score QI et heures de sport hebdomadaires.
+              </p>
+              <p>
+                Vous vous retrouvez alors avec un tableau de cent lignes et huit colonnes. 
+                À l'œil nu, impossible d'y voir un quelconque motif : qui ressemble à qui ? 
+                Quelles caractéristiques vont souvent ensemble ? Existe-t-il des profils types ?
+              </p>
+              <p>
+                C'est exactement ce que l'ACP permet de faire : résumer toutes ces caractéristiques 
+                en un nombre réduit de nouvelles caractéristiques, appelés composantes principales.
+                L'ACP ne supprime pas de caractéristique, elle "regroupe", par le calcul, plusieurs caractéristiques pour en créer des nouvelles.
+              </p>
+              <p>
+                Dans cet exemple vous pourriez, à l'aide de l'ACP, réduire ces 8 caractéristiques en 2 caractéristiques donnant
+                finalement une liste de "coordonées" sur un plan. La première colonne (nouvelle caractéristique) donnant la position de chaque individu sur 
+                l'axe horizontal et la deuxième, sa position sur l'axe vertical. Cela permettrait de visualiser les ressemblances 
+                et de remarquer des profils types regroupés dans les mêmes zones du graphique.
+              </p>
+              <p>
+                En termes mathématiques, l'ACP cherche à projeter les données dans un espace de taille réduite tout en conservant le 
+                maximum d'information.
+              </p>
+            </div>
+
+            <p>
+                Mais alors, comment cela fonctionne concrètement ?
+            </p>
+
+            <p>
+              Premièrement, pour réaliser une ACP nous avons besoin d'un tableau de valeurs (une matrice). Chaque ligne représentera un individu et chaque colonne représentera
+              une variable (caractéristique) comme suit :
+
+            </p>
+
+            <!-- Tableau exemple -->
+            <table>
+              <thead>
+                <tr>
+                  <th>Individus ↓ / Variables →</th>
+                  <th>X<sub>1</sub></th>
+                  <th>X<sub>2</sub></th>
+                  <th>X<sub>3</sub></th>
+                  <th>X<sub>4</sub></th>
+                  <th>X<sub>5</sub></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Individu 1</td>
+                  <td>x<sub>11</sub></td><td>x<sub>12</sub></td><td>x<sub>13</sub></td><td>x<sub>14</sub></td><td>x<sub>15</sub></td>
+                </tr>
+                <tr>
+                  <td>Individu 2</td>
+                  <td>x<sub>21</sub></td><td>x<sub>22</sub></td><td>x<sub>23</sub></td><td>x<sub>24</sub></td><td>x<sub>25</sub></td>
+                </tr>
+                <tr>
+                  <td>Individu 3</td>
+                  <td>x<sub>31</sub></td><td>x<sub>32</sub></td><td>x<sub>33</sub></td><td>x<sub>34</sub></td><td>x<sub>35</sub></td>
+                </tr>
+                <tr>
+                  <td>Individu 4</td>
+                  <td>x<sub>41</sub></td><td>x<sub>42</sub></td><td>x<sub>43</sub></td><td>x<sub>44</sub></td><td>x<sub>45</sub></td>
+                </tr>
+                  <td colspan="6" class="table-dots">⋮ ⋮ ⋮</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>
+               Avant de réaliser des calculs avec les valeurs de la matrice, nous devons éviter que certaines valeurs en "écrasent" d'autres 
+               (comme le salaire avec l'age par exemple). Pour éviter cela, il existe une méthode qui consiste à
+               centrer les valeurs, c'est-à-dire faire en sorte que la moyenne sur chaque colonne soit nulle (soustraire la moyenne des valeurs de la 
+               colonne à toutes les valeurs de la collone). Puis après cela 
+               "réduire" les données, c'est-à-dire faire en sorte que la variance soit égale à 1 pour chaque colonne (caractéristique). 
+               Le processus de centrer + réduire s'appelle la normalisation ou standardisation.
+               Grâce à cette méthode, les caractéristiques de plus grande valeur ne peuvent plus "écraser" les autres car elles sont toutes à la même échelle. 
+            </p>
+
+            <p>
+              Comprendre le centrage et la réduction est très important, le reformuler en français aide non seulement à comprendre mais aussi à retenir un concept 
+              plus facilement (et pouvoir retrouver les formules par logique sans les apprendre). Ma vision des chose est la suivante : je vois le centrage 
+              comme donner un point de repère et la réduction comme ramener toutes les variables à une échelle communes autour de notre point de repère. 
+            </p>
+
+            <p>
+              Maintenant que la matrice est centrée-réduite, nous pouvons réaliser une ACP correctement. L'objectif est de trouver une matrice \( V \) telle que 
+              \( P = RV \) soit une matrice dont chaque vecteur est indépendant (matrice orthogonale), c'est-à-dire que chaque nouvelle caractéristique soit décorrélée des autres. On cherchera 
+               également à faire en sorte que l'information contenue dans la matrice \(P\) soit hiérarchisée, c'est-à-dire que chaque colonne donne moins d'information
+               que la précédente. 
+            </p>
+
+            <p>
+              Pour trouver cette matrice \(V\) nous avons découvert un outil très puissant cette année : la décomposition en valeur singulières (= SVD = Singular Value Decomposition). Comme cette méthode 
+              pourrait faire l'objet d'un projet à elle seule, je ne la détaillerai pas ici. Cependant, voici le concept en bref : une SVD permet de décomposer une matrice
+              en trois autres matrices ayant les propriétés que l'on recherche ici (l'orthogonalité et la hiérarchisation). Je vais donc l'utiliser pour réaliser une ACP sur une 
+              base de données générée par intelligence artificielle. Voici le code python écrit pour l'occasion :
+            </p>
+
+<pre>
+<code class="language-python">
+import numpy as np
+import pandas as ps
+import matplotlib.pyplot as plt
+
+#%% Création de la fonction qui réalise l'ACP
+def ACP(R):
+    """
+    Déroulement de l'ACP
+        - Centrage (Manière matricielle)
+        - Réduction (Manière matricielle)
+        - Calcul de la SVD
+        - Calcul de la matrice P
+    
+    Entrée
+        R : Matrice non normalisée sur laquelle réaliser l'ACP
+    
+    Sortie
+        P : Matrice des composantes principales
+        Epsilon : Vecteur des valeurs singulières de la SVD, permet de
+                  calculer le pourcentage d'information contenu dans les
+                  n permières composantes principales
+    """
+    
+    # Récupération de la taille de la matrice
+    m,n = np.shape(R)
+    
+    # Centrage de la matrice
+    R = R - 1/m*np.ones((m,1))@np.ones((1,m))@R
+
+    # Réduction de la matrice
+    variable = []
+    for i in range(n):
+        variable.append(np.sqrt(1/m*sum(R[:,i]**2)))
+    D = np.diag(variable)
+    R = R@np.linalg.inv(D)
+
+    # SVD de la matrice centrée-réduite
+    U,Epsilon,VT = np.linalg.svd(R)
+
+    # Calcul de la matrice P
+    P = R@VT.T
+    
+    return P, Epsilon
+
+#%% Importation, traitement des données et mise sous forme de matrice
+
+# Définition du chemin vers les données (enregistrées en csv)
+chemin_donnees = "donnees_acp_avec_profils.csv"
+
+# Importation des données via Pandas
+df = ps.read_csv("Data/" + chemin_donnees)
+
+# Sauvegarde des différents profils avant suppression de ceux-ci pour
+# afficher des points de différentes couleurs par la suite
+Profils = df["Profil"]
+
+# Suppression des colonnes non pertinentes pour la comparaison (profil et ID)
+df = df.drop('Profil', axis=1)
+df = df.drop('ID', axis=1)
+
+# Mise sous forme de matrice
+R = df.to_numpy()
+
+# Execution de l'ACP sur R
+P, eps = ACP(R)
+
+# Calcul du pourcentage d'information conservée avec seulement deux composantes 
+taux_info = int(((eps[0]**2 + eps[1]**2)/sum(eps**2) )* 100)
+
+# Dictionnaire des couleurs en fonction des profils
+couleurs_des_points = {
+    "Étudiant" : "blue",
+    "Jeune sportif" : "red",
+    "Parent" : "green",
+    "Cadre senior" : "black"
+    }
+
+# Affichage des différentes couleurs pour chaque profil
+for profil, couleur in couleurs_des_points.items():
+    masque = profil == Profils
+    
+    # Ajout des points sur le graphique
+    plt.scatter(P[masque,0], P[masque,1], c = couleur)
+    
+# Paramètres du graphique (titres et légendes)
+plt.title("Répartition des individus en fonction des deux premières composantes principales")
+plt.legend([i for i in couleurs_des_points.keys()], loc="upper left", 
+           bbox_to_anchor=(1, 0.75), title=f"Taux d'infomation conservée : \n {taux_info}%")
+plt.xlabel("Composante 1")
+plt.ylabel("Composante 2")
+plt.grid(visible="True")
+plt.show()
+</code>
+</pre>
+
+            <div class="download-bar">
+              <a class="download-link" href="../Codes/P1_ACP.txt" download="Projet_ACP.py">
+                <i class="ti ti-download"></i> Code Python 
+              </a>
+              <a class="download-link" href="../Codes/Data/donnees_acp_avec_profils.csv" download>
+                <i class="ti ti-download"></i> Données CSV 
+              </a>
+          </div>
+
+            <p>
+              En éxécutant cet algorithme, on obtient le graphique suivant :
+            </p>
+
+            <img class="article-img" src="../Codes/Images/Resultat_ACP_avec_profils.png" alt="Graphique ACP"/>
+            <p class="img-caption">Figure 1 : Résultat après exécution du script Python (adapté à la DA)</p>
+
+            <p>
+              Le graphique nous montre que les individus avec des caractéristiques en commun sont "regroupés", pile ce que l'on voulait vérifier. 
+              Les axes ne représentent rien physiquement ici, ce sont les valeurs des composantes 1 et 2, un mélange judicieux de toutes les autres variables. 
+              Chaque point représente cependant bien un individu, en prenant deux points on pourrait alors comparer deux individus dans le tableau d'origine si l'on
+              voulait faire une analyse plus fine. On remarque également que seulement 65% de l'information est conservée, donc 35% n'est pas visible sur ce graphique. 
+              Pour aller plus loin on pourrait comparer les données en 3 dimensions si le résultat ne nous convenait pas ici.
+              Celle-ci nous convient car cette base de données a été créée pour l'occasion et j'ai demandé à l'IA de créer des profils types pour avoir un résultat
+              visuellement convaincant, c'est pour cette raison 
+              qu'avec si peu d'échantillons nous arrivons à avoir autant de groupes distincts. En pratique nous aurions sûrement besoin
+              de plus d'échantillons pour avoir de tels résultats si les individus étaient réellement choisis de manière aléatoire.
+            </p>
+
+            <p>
+              Pour conclure sur cette démonstration, j'espère vous avoir convaincu du fait que l'ACP est un outil très puissant dans son domaine.
+              Assez compliquée à comprendre mathématiquement mais accessible conceptuellement. Elle permet par exemple de faire des classifications. Cela peut être classifier des fleurs par rapport à plusieurs caractéristiques  
+              (longueur des pétales, largeur des sépales, etc), mais toujours avec des caractéristiques quantitatives. 
+            </p>  
+            <p>
+              Une question survient alors : est-il possible de faire cela avec des caractéristiques qualitatives (couleur, catégories, oui/non) ? 
+              La réponse est oui et l'algorithme lié s'appelle l'ACM (ou Analyse des Correspondances Multiples). Pour comprendre cet algorithme il faut d'abord comprendre l'AFC, qui est le fondement même de l'ACM.
+            </p>
+
+
+            <p class="sidebar-link" onclick="showPage('afc')">
+              <i class="ti ti-arrow-right"></i> L'AFC (Analyse Factorielle des Correspondances)
+            </p>
+
+
           </div>
         </div>
+
+
+
+
 
         <!-- PAGE AFC -->
         <div class="page" id="page-afc">
-          <span class="article-tag">// 03 — Analyse</span>
+          <span class="article-tag">// 03 — Analyse de données</span>
           <h1 class="article-title">AFC</h1>
           <div class="article-body">
+
+
             <p>Contenu de la page AFC.</p>
-            <img class="article-img" src="image-afc.jpg" alt="Graphique AFC"/>
+            <img class="article-img" src="image-afc.jpg" alt="Exemple d'image"/>
             <p class="img-caption">Légende de l'image</p>
+
+
           </div>
         </div>
 
-      </main>
 
-      <footer class="proj-footer">
-        <span class="sk-card-title">© 2026 Marius COISSARD</span>
-      </footer>
+
+
+        
+        <!-- PAGE ACM -->
+        <div class="page" id="page-acm">
+          <span class="article-tag">// 03 — Analyse de données</span>
+          <h1 class="article-title">ACM</h1>
+          <div class="article-body">
+
+
+            <p>Contenu de la page ACM.</p>
+            <img class="article-img" src="image-acm.jpg" alt="Graphique ACM"/>
+            <p class="img-caption">Légende de l'image</p>
+
+
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+      </main>
     </div>
 
   </div>
@@ -131,11 +448,13 @@
     });
 
     // ── Navigation entre pages ──
-    function showPage(id, link) {
+    function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + id).classList.add('active');
       document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
+      document.getElementById('sidebar-link-' + id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      MathJax.typesetPromise();
     }
 
     // ── Épinglage de la sidebar ──
@@ -154,4 +473,7 @@
   </script>
 
 </body>
+      <footer class="proj-footer">
+        <span class="sk-card-title">© 2026 Marius COISSARD</span>
+      </footer>
 </html>

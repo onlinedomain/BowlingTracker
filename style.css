@@ -681,6 +681,9 @@ nav::after{
   flex-shrink: 0;
   background: #0e0e14;
   border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+
   transition: width .35s ease;
   overflow: hidden;
   padding-top: 1.25rem;
@@ -868,6 +871,9 @@ nav::after{
   border: 1px solid var(--border);
   border-radius: 8px;
   margin-bottom: 2rem;
+  padding: 2px;
+  border-color: var(--gold);
+  border-width: 2px;
   display: block;
 }
 
@@ -916,4 +922,134 @@ nav::after{
 }
 /* _________________________________ Fin CSS pages projets _________________________________ */
 
+/* ##################################### Blocs exemples ##################################### */
+.example-block {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 4px;
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+}
 
+.example-block::before {
+  content: 'Exemple';
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: .6rem;
+  opacity: 0.75;
+}
+
+.example-block p {
+  margin-bottom: 0;
+  color: rgba(245,241,230,.55);
+  font-size: .88rem;
+  font-style: italic;
+  line-height: 1.75;
+}
+
+.example-block p:not(:last-child) {
+  margin-bottom: .75rem;
+}
+/* _________________________________ Fin Blocs exemples _________________________________ */
+
+/* ##################################### Tableaux Exemples ##################################### */
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+  margin: 1.5rem 0;
+}
+
+.article-body th,
+.article-body td {
+  padding: .7rem 1rem;
+  border: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+}
+
+.article-body thead th {
+  background: var(--surface-light);
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .08em;
+  font-weight: 500;
+}
+
+.article-body tbody tr:first-child td {
+  color: var(--white);
+}
+
+.article-body tbody td:first-child {
+  font-family: var(--mono);
+  font-size: .75rem;
+  color: var(--gold);
+  text-align: left;
+  background: var(--surface);
+}
+
+.table-dots {
+  text-align: center !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+/* _________________________________ Fin Tableaux Exemples _________________________________ */
+
+pre[class*="language-"] {
+  background: #0d0d12;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: .85rem;
+  line-height: 1.8;
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+}
+
+.download-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: .75rem 1.1rem;
+  margin: 1.5rem 0;
+  background: rgba(255,255,255,.02);
+}
+
+.download-bar::before {
+  content: 'Téléchargements';
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: .6rem;
+  opacity: 0.75;
+}
+
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--gold);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+  transition: color .2s;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.download-link:hover {
+  color: var(--gold);
+}

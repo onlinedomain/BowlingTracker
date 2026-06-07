@@ -34,15 +34,13 @@
     <a href="../contact.html">Contact</a>
   </div>
 
+
+
+
   <!-- CORPS DU PROJET : sidebar + contenu côte à côte -->
   <div class="proj-body">
 
     <!-- SIDEBAR -->
-    <!--
-      AJOUTER UNE PAGE :
-      1. Copie un .sidebar-link ci-dessous, change onclick="showPage('mon-id', this)", l'icône et le texte
-      2. Ajoute un div.page id="page-mon-id" dans .content-inner
-    -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-head">
         <span class="sidebar-label">Sections</span>
@@ -51,14 +49,17 @@
         </button>
       </div>
 
-      <div class="sidebar-link active" onclick="showPage('intro', this)">
-        <i class="ti ti-location-pin"></i><span>Introduction</span>
+      <div class="sidebar-link active" onclick="showPage('intro')" id="sidebar-link-intro">
+        <i class="ti ti-home"></i><span>Introduction</span>
       </div>
-      <div class="sidebar-link" onclick="showPage('acp', this)">
+      <div class="sidebar-link" onclick="showPage('acp')" id="sidebar-link-acp">
         <i class="ti ti-chart-dots"></i><span>ACP</span>
       </div>
-      <div class="sidebar-link" onclick="showPage('afc', this)">
-        <i class="ti ti-chart-bar"></i><span>AFC</span>
+      <div class="sidebar-link" onclick="showPage('afc')" id="sidebar-link-afc">
+        <i class="ti ti-table-off"></i><span>AFC</span>
+      </div>
+      <div class="sidebar-link" onclick="showPage('acm')" id="sidebar-link-acm">
+        <i class="ti ti-schema"></i><span>ACM</span>
       </div>
     </aside>
 
@@ -68,49 +69,145 @@
 
         <a class="back-link" href="../index.html#projects">← Retour aux projets</a>
 
+
+
+
+
+
         <!-- PAGE INTRO -->
         <div class="page active" id="page-intro">
 
               <span class="article-tag">// 01 — Introduction</span>
-              <h1 class="article-title">Titre du projet</h1>
+              <h1 class="article-title">Analyse de données</h1>
               <div class="article-meta">
-                <div class="meta-item"><span>Date</span>10/06/2026</div>
-                <div class="meta-item"><span>Contexte</span>Projet scolaire</div>
+                <div class="meta-item"><span>Date</span>06/2026</div>
+                <div class="meta-item"><span>Contexte</span>Projet Individuel</div>
                 <div class="meta-item"><span>Matière</span>Modélisation et Simulation Numérique</div>
               </div>
               <div class="article-body">
-                <p>Introduction du projet, contexte et objectifs.</p>
-              </div>
 
+
+                <p>
+                  Les méthodes d'analyses de données telles que l'ACP, l'AFC ou encore l'ACM sont assez intimidantes au premier regard. Ce projet est né d'une envie de démystifier
+                  ces concepts en les appliquant à des situations concrètes. J'ai découvert au fil du projet que la majorité des mathématiques derrière ces méthodes 
+                  sont accessibles et compréhensibles. J'essaye donc ici de présenter ce que j'ai découvert avec ces méthodes de manière vulgarisée, sans sacrifier la 
+                  rigueur scientifique.
+                </p>
+                <p class="sidebar-link" onclick="showPage('acp')">
+                  <i class="ti ti-arrow-right"></i> L'ACP (Analyse en Composantes Multiples)
+                </p>
+                <p class="sidebar-link" onclick="showPage('afc')">
+                  <i class="ti ti-arrow-right"></i> L'AFC (Analyse Factorielle des Correspondances)
+                </p>
+                <p class="sidebar-link" onclick="showPage('acm')">
+                  <i class="ti ti-arrow-right"></i> L'ACP (Analyse des Correspondances Multiples)
+                </p>
+
+              </div>
         </div>
+
+
+
+
 
         <!-- PAGE ACP — COPIE CE BLOC POUR AJOUTER UNE PAGE -->
         <div class="page" id="page-acp">
           <span class="article-tag">// 02 — Analyse</span>
           <h1 class="article-title">ACP</h1>
           <div class="article-body">
-            <p>On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).</p>
+
+
+            <p>
+              L'objectif de l'analyse en correspodances multiples (ou ACP) est de pouvoir rendre plus "évident" des liens entre plusieurs individus par rapport
+              à plusieurs caractéristiques. Cette méthode est souvent vue comme permettant l'étude des ressemblances. 
+            </p>
+
+            <div class="example-block">
+              <p>
+                Imaginez que vous avez interrogé une centaine de personnes sur leurs caractéristiques 
+                personnelles : poids, taille, âge, salaire annuel, niveau d'études, nombre d'enfants, 
+                score QI et heures de sport hebdomadaires.
+              </p>
+              <p>
+                Vous vous retrouvez alors avec un tableau de cent lignes et huit colonnes. 
+                À l'œil nu, impossible d'y voir un quelconque motif : qui ressemble à qui ? 
+                Quelles caractéristiques vont souvent ensemble ? Existe-t-il des profils types ?
+              </p>
+              <p>
+                C'est exactement ce que l'ACP permet de faire : résumer toutes ces caractéristiques 
+                en un nombre réduit de nouvelles caractéristiques, appelés composantes principales.
+                L'ACP ne supprime pas de caractéristique, elle "regroupe", par le calcul, plusieurs caractéristiques pour en créer des nouvelles.
+              </p>
+              <p>
+                Dans cet exemple vous pourriez, à l'aide de l'ACP, réduire ces 8 caractéristiques en 2 caractéristiques donnant
+                finalement une liste de "coordonées" sur un plan. La première colonne (nouvelle caractéristique) donnant la position de chaque individu sur 
+                l'axe horizontal et la deuxième, sa position sur l'axe vertical. Cela permettrait de visualiser les ressemblances 
+                et de remarquer des profils types regroupés dans les mêmes zones du graphique.
+              </p>
+            </div>
+
+            <p>
+                Mais alors, comment cela fonctionne concrètement ?
+            </p>
+
+            <p>
+              
+            </p>
+
             <img class="article-img" src="plots_acp.jpg" alt="Graphique ACP"/>
             <p class="img-caption">Légende de l'image</p>
+
+
+
           </div>
         </div>
+
+
+
+
 
         <!-- PAGE AFC -->
         <div class="page" id="page-afc">
           <span class="article-tag">// 03 — Analyse</span>
           <h1 class="article-title">AFC</h1>
           <div class="article-body">
+
+
             <p>Contenu de la page AFC.</p>
             <img class="article-img" src="image-afc.jpg" alt="Graphique AFC"/>
             <p class="img-caption">Légende de l'image</p>
+
+
           </div>
         </div>
 
-      </main>
 
-      <footer class="proj-footer">
-        <span class="sk-card-title">© 2026 Marius COISSARD</span>
-      </footer>
+
+
+        
+        <!-- PAGE ACM -->
+        <div class="page" id="page-acm">
+          <span class="article-tag">// 03 — Analyse</span>
+          <h1 class="article-title">ACM</h1>
+          <div class="article-body">
+
+
+            <p>Contenu de la page ACM.</p>
+            <img class="article-img" src="image-acm.jpg" alt="Graphique ACM"/>
+            <p class="img-caption">Légende de l'image</p>
+
+
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+      </main>
     </div>
 
   </div>
@@ -131,11 +228,12 @@
     });
 
     // ── Navigation entre pages ──
-    function showPage(id, link) {
+    function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + id).classList.add('active');
       document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
+      document.getElementById('sidebar-link-' + id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ── Épinglage de la sidebar ──
@@ -154,4 +252,7 @@
   </script>
 
 </body>
+      <footer class="proj-footer">
+        <span class="sk-card-title">© 2026 Marius COISSARD</span>
+      </footer>
 </html>
