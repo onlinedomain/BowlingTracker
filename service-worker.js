@@ -1,4 +1,4 @@
-const CACHE_NAME = "bowling-tracker-v1";
+const CACHE_NAME = "bowling-tracker-v2";
 
 const APP_FILES = [
   "./",
