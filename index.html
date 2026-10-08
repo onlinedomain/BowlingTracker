@@ -38,8 +38,6 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 body{min-height:100vh;padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom));overflow-x:hidden}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
 .app{max-width:1100px;margin:auto;min-height:100vh}
 
 header{
@@ -69,7 +67,7 @@ h3{font-size:16px;margin:0 0 10px}
 
 .card{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:18px;margin-bottom:14px;margin-top: 14px;
+  box-shadow:var(--shadow);padding:18px;margin-bottom:14px;margin-top:14px;
 }
 .stat-big{font-size:58px;line-height:.95;font-weight:900;letter-spacing:-3px}
 .stat-label{font-size:13px;color:var(--muted);margin-top:6px}
@@ -77,6 +75,12 @@ h3{font-size:16px;margin:0 0 10px}
 .stat-card{padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:17px}
 .stat-value{font-size:27px;font-weight:850;letter-spacing:-1px}
 .stat-small{font-size:12px;color:var(--muted);margin-top:4px}
+
+.performance-special-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
 .btn{
   border:0;border-radius:13px;padding:11px 15px;font-weight:750;
@@ -148,7 +152,7 @@ label{font-size:12px;font-weight:750;color:var(--muted);display:block;margin-bot
 .day[data-count="1"]{background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
 .day[data-count="2"]{background:color-mix(in srgb,var(--accent) 18%,var(--surface))}
 .day[data-count="3"]{background:color-mix(in srgb,var(--accent) 28%,var(--surface))}
-.day[data-count="4"]{background:color-mix(in srgb,var(--accent) 40%,var(--surface))}
+.day[data-count="4"]{background:color-mix(in srgb,var(--accent) 40%,var(--surface));color:#fff}
 .day[data-count="5"]{background:color-mix(in srgb,var(--accent) 52%,var(--surface));color:#fff}
 
 .week-list{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
@@ -165,17 +169,45 @@ label{font-size:12px;font-weight:750;color:var(--muted);display:block;margin-bot
 }
 .hero-performance .total{grid-row:span 2}
 
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.compare-col{padding:14px;background:var(--surface2);border-radius:15px}
+.compare-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+  overflow-x:auto;
+}
+.compare-col{padding:14px;background:var(--surface2);border-radius:15px;min-width:180px}
 .compare-name{font-weight:850;margin-bottom:12px}
 .compare-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .compare-row:last-child{border:0}
+.compare-remove{
+  width:27px;height:27px;border:0;border-radius:50%;
+  background:var(--danger);color:#fff;font-weight:900;
+  display:grid;place-items:center;cursor:pointer
+}
+.compare-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.compare-header-name{font-weight:850;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .chart-wrap{height:290px;position:relative}
 canvas{width:100%;height:100%}
 .chart-controls{display:flex;gap:7px;overflow:auto;margin-bottom:12px}
-.chart-controls button{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 11px;font-size:11px;font-weight:750;white-space:nowrap}
-.chart-controls button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.chart-controls button,.chart-metric-controls button{
+  border:1px solid var(--border);background:var(--surface);color:var(--text);
+  border-radius:10px;padding:8px 11px;font-size:11px;font-weight:750;white-space:nowrap
+}
+.chart-controls button.active,.chart-metric-controls button.active{
+  background:var(--accent);border-color:var(--accent);color:#fff
+}
+.chart-metric-controls{
+  display:flex;gap:7px;overflow:auto;margin-bottom:12px
+}
+.chart-compare-actions{display:flex;gap:8px;align-items:center}
+.chart-compare-actions>*{flex:1}
+.chart-legend{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;
+  font-size:11px;color:var(--muted)
+}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:3px}
 
 .game-card{padding:14px;cursor:pointer;transition:.15s;background:var(--card-hi);border-color:color-mix(in srgb,var(--text) 14%,var(--surface))}
 .game-card:active{transform:scale(.99)}
@@ -292,7 +324,6 @@ canvas{width:100%;height:100%}
 .tour-button span{font-size:13px;color:var(--text);display:block;margin:3px 0}
 .tour-button b{color:var(--text)}
 
-/* Symboles de coups bien visibles */
 .r{font-weight:900;font-size:1.25em;display:inline-block;min-width:1em;text-align:center}
 .r-x{color:var(--strike);font-size:1.5em;text-shadow:0 0 .5px currentColor}
 .r-s{color:var(--spare);font-size:1.5em;text-shadow:0 0 .5px currentColor}
@@ -301,6 +332,34 @@ canvas{width:100%;height:100%}
 .rolls .r-x,.rolls .r-s{font-size:19px}
 .fg-rolls .r{font-size:14px}
 .fg-rolls .r-x,.fg-rolls .r-s{font-size:18px}
+
+.period-shortcuts{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  margin-bottom:14px;
+}
+.period-shortcuts button{
+  flex:0 0 auto;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:10px;
+  padding:8px 11px;
+  font-size:11px;
+  font-weight:750;
+}
+.period-shortcuts button.active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+.play-date-time{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
 .toast{
   position:fixed;z-index:500;bottom:calc(var(--nav-height) + 15px);left:50%;
@@ -319,7 +378,6 @@ canvas{width:100%;height:100%}
   .modal-box{border-radius:24px;max-height:90vh}
 }
 
-/* ---------- MOBILE ---------- */
 @media(max-width:480px){
   :root{--nav-height:64px;--radius:15px}
   input,select,textarea{font-size:16px}
@@ -345,9 +403,9 @@ canvas{width:100%;height:100%}
   .week-count{font-size:24px}
   .month-title{font-size:16px}
   .compare-grid{gap:7px}
-  .compare-col{padding:10px}
+  .compare-col{padding:10px;min-width:165px}
   .compare-row{font-size:12px}
-  .chart-wrap{height:230px}
+  .chart-wrap{height:250px}
   .game-card{padding:12px}
   .game-score{font-size:30px}
   .pin-layout{height:240px}
@@ -365,13 +423,14 @@ canvas{width:100%;height:100%}
   .nav-item{font-size:9px;gap:2px}
   .nav-item .nav-icon{font-size:20px}
   .play-nav .nav-icon{width:42px;height:42px;font-size:28px}
+  .play-date-time{grid-template-columns:1fr}
 }
-/* Très petits écrans : barre du bas sans texte */
+
 @media(max-width:400px){
   .nav-item span:not(.nav-icon){display:none}
   .nav-item .nav-icon{font-size:23px;line-height:26px}
 }
-/* Tableau des tours sur 2 lignes (5 par ligne) */
+
 @media(max-width:560px){
   .score-table thead tr{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
   .score-table{border-spacing:0;display:block}
@@ -384,6 +443,7 @@ canvas{width:100%;height:100%}
 
 <body>
 <div class="app">
+
 <header>
   <div class="logo">Bowling<span>Tracker</span></div>
   <div class="header-actions">
@@ -404,6 +464,7 @@ canvas{width:100%;height:100%}
       <div class="month-title" id="calendarTitle"></div>
       <button class="icon-btn" onclick="changeCalendar(1)">›</button>
     </div>
+
     <div class="between" style="margin-bottom:12px">
       <button class="btn" onclick="calendarToday()">Aujourd'hui</button>
       <div class="switcher">
@@ -411,6 +472,7 @@ canvas{width:100%;height:100%}
         <button id="weekBtn" onclick="setCalendarMode('week')">Semaine</button>
       </div>
     </div>
+
     <div id="calendarContent"></div>
   </div>
 
@@ -431,34 +493,52 @@ canvas{width:100%;height:100%}
       <div class="stat-big" id="perfTotal">0</div>
       <div class="stat-label">PARTIES AU TOTAL</div>
     </div>
+
     <div>
       <div class="stat-value" id="perfAverage">0</div>
       <div class="stat-small">Score moyen</div>
     </div>
+
     <div>
       <div class="stat-value" id="perfBest">0</div>
       <div class="stat-small">Meilleur score</div>
     </div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-value" id="perfStrike">0%</div><div class="stat-small">Taux de strike</div></div>
-    <div class="stat-card"><div class="stat-value" id="perfSpare">0%</div><div class="stat-small">Taux de spare</div></div>
+  <div class="performance-special-stats">
+    <div class="stat-card">
+      <div class="stat-value" id="perfStrike">0%</div>
+      <div class="stat-small">Taux de strike</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="perfSpare">0%</div>
+      <div class="stat-small">Taux de spare</div>
+    </div>
   </div>
 
   <div class="card">
     <h2>Sur une période</h2>
-    <div class="row" style="margin-bottom:14px">
-      <div class="field" style="margin:0">
-        <label for="perfFrom">Du</label>
-        <input id="perfFrom" type="date">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="perfTo">Au</label>
-        <input id="perfTo" type="date">
-      </div>
+
+    <!-- Dates verticales et pleine largeur -->
+    <div class="field">
+      <label for="perfFrom">Du</label>
+      <input id="perfFrom" type="date">
     </div>
+
+    <div class="field">
+      <label for="perfTo">Au</label>
+      <input id="perfTo" type="date">
+    </div>
+
+    <!-- Raccourcis -->
+    <div class="period-shortcuts">
+      <button id="period3Btn" onclick="setPeriodShortcut(3,this)">3 derniers jours</button>
+      <button id="period7Btn" onclick="setPeriodShortcut(7,this)">7 derniers jours</button>
+      <button id="period30Btn" onclick="setPeriodShortcut(30,this)">30 derniers jours</button>
+    </div>
+
     <button class="btn primary full" style="margin-bottom:14px" onclick="applyPerfRange()">Afficher cette période</button>
+
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-value" id="periodGames">0</div><div class="stat-small">Parties</div></div>
       <div class="stat-card"><div class="stat-value" id="periodAvg">0</div><div class="stat-small">Moyenne</div></div>
@@ -472,12 +552,13 @@ canvas{width:100%;height:100%}
   <div class="card">
     <div class="between">
       <div>
-        <h2 style="margin-bottom:2px">Comparer un ami</h2>
-        <div class="stat-small">Importe son fichier JSON depuis les paramètres ou ici.</div>
+        <h2 style="margin-bottom:2px">Comparer des amis</h2>
+        <div class="stat-small">Tu peux importer plusieurs fichiers JSON.</div>
       </div>
       <button class="btn primary" onclick="document.getElementById('friendFile').click()">Importer</button>
       <input id="friendFile" class="hidden" type="file" accept=".json,application/json" onchange="importFriend(event)">
     </div>
+
     <div id="compareArea" style="margin-top:14px"></div>
   </div>
 </section>
@@ -485,6 +566,23 @@ canvas{width:100%;height:100%}
 <!-- JOUER -->
 <section id="view-play" class="view">
   <h1>Jouer</h1>
+
+  <!-- Date et heure de la partie -->
+  <div class="card">
+    <h3>Date et heure</h3>
+
+    <div class="play-date-time">
+      <div class="field" style="margin:0">
+        <label for="gameDate">Jour de la partie</label>
+        <input id="gameDate" type="date" onchange="onGameDateTimeInput()">
+      </div>
+
+      <div class="field" style="margin:0">
+        <label for="gameTime">Heure de la partie</label>
+        <input id="gameTime" type="time" onchange="onGameDateTimeInput()">
+      </div>
+    </div>
+  </div>
 
   <div class="card" style="margin-bottom:13px">
     <div class="row">
@@ -512,6 +610,7 @@ canvas{width:100%;height:100%}
       <label>Commentaire de la partie</label>
       <textarea id="gameComment" placeholder="Conditions, sensations, matériel..." oninput="currentGame.comment=this.value"></textarea>
     </div>
+
     <div class="current-game-actions">
       <button class="btn" onclick="newGame()">Nouvelle partie</button>
       <button class="btn primary" onclick="saveCurrentGame()">Enregistrer</button>
@@ -522,21 +621,45 @@ canvas{width:100%;height:100%}
 <!-- GRAPHIQUE -->
 <section id="view-chart" class="view">
   <h1>Graphique</h1>
-  <p class="subtitle">L'évolution de tes scores dans le temps.</p>
+  <p class="subtitle">Compare tes performances avec celles de tes amis.</p>
 
   <div class="card">
+
     <div class="chart-controls">
       <button class="active" onclick="setChartRange('week',this)">1 semaine</button>
       <button onclick="setChartRange('month',this)">1 mois</button>
       <button onclick="setChartRange('year',this)">1 année</button>
     </div>
-    <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+
+    <!-- Choix de la donnée -->
+    <div class="chart-metric-controls">
+      <button class="active" onclick="setChartMetric('score',this)">Score</button>
+      <button onclick="setChartMetric('strike',this)">Taux de strikes</button>
+      <button onclick="setChartMetric('spare',this)">Taux de spares</button>
+    </div>
+
+    <div class="chart-compare-actions">
+      <button class="btn primary" onclick="document.getElementById('friendFileChart').click()">⇄ Comparer un ami</button>
+      <input id="friendFileChart" class="hidden" type="file" accept=".json,application/json" onchange="importFriend(event,'chart')">
+      <button class="btn" onclick="clearAllFriends()">Retirer les amis</button>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="scoreChart"></canvas>
+    </div>
+
+    <div id="chartLegend" class="chart-legend"></div>
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-value" id="chartMax">0</div><div class="stat-small">Meilleur score</div></div>
-    <div class="stat-card"><div class="stat-value" id="chartMin">0</div><div class="stat-small">Score le plus bas</div></div>
-    <div class="stat-card"><div class="stat-value" id="chartAvg">0</div><div class="stat-small">Moyenne</div></div>
+    <div class="stat-card"><div class="stat-value" id="chartMax">0</div><div class="stat-small" id="chartMaxLabel">Meilleur score</div></div>
+    <div class="stat-card"><div class="stat-value" id="chartMin">0</div><div class="stat-small" id="chartMinLabel">Score le plus bas</div></div>
+    <div class="stat-card"><div class="stat-value" id="chartAvg">0</div><div class="stat-small" id="chartAvgLabel">Moyenne</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Personnes comparées</h2>
+    <div id="chartFriendsList"></div>
   </div>
 </section>
 
@@ -554,15 +677,19 @@ canvas{width:100%;height:100%}
     <button class="nav-item active" data-view="calendar" aria-label="Calendrier" onclick="navigate('calendar')">
       <span class="nav-icon">▦</span><span>Calendrier</span>
     </button>
+
     <button class="nav-item" data-view="performance" aria-label="Performances" onclick="navigate('performance')">
       <span class="nav-icon">◒</span><span>Performances</span>
     </button>
+
     <button class="nav-item play-nav" data-view="play" aria-label="Jouer" onclick="navigate('play')">
       <span class="nav-icon">+</span><span>Jouer</span>
     </button>
+
     <button class="nav-item" data-view="chart" aria-label="Graphique" onclick="navigate('chart')">
-      <span class="nav-icon">⌁</span><span>Graphique</span>
+      <span class="nav-icon">▥</span><span>Graphique</span>
     </button>
+
     <button class="nav-item" data-view="history" aria-label="Historique" onclick="navigate('history')">
       <span class="nav-icon">☷</span><span>Historique</span>
     </button>
@@ -570,23 +697,34 @@ canvas{width:100%;height:100%}
 </nav>
 </div>
 
-<!-- SETTINGS MODAL -->
+<!-- SETTINGS -->
 <div id="settingsModal" class="modal" onclick="if(event.target===this)closeModal('settingsModal')">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('settingsModal')">×</button>
     <div class="modal-title">Paramètres</div>
 
     <div class="card" style="box-shadow:none;margin-bottom:10px">
+      <h3>Mon nom</h3>
+      <div class="stat-small" style="margin:-4px 0 10px">
+        Ce nom sera enregistré dans ton fichier JSON et affiché lorsque tes données seront comparées.
+      </div>
+      <input id="playerName" type="text" maxlength="40" placeholder="ex. Thomas" oninput="onPlayerNameInput()">
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:10px">
       <h3>Thème</h3>
+
       <div class="theme-options">
         <button class="theme-option" data-theme="light" onclick="setTheme('light')">
           <div class="theme-preview" style="background:#f4f5f7;border:1px solid #ddd"></div>
           <div class="theme-name">Clair</div>
         </button>
+
         <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
           <div class="theme-preview" style="background:#11151b"></div>
           <div class="theme-name">Foncé</div>
         </button>
+
         <button class="theme-option" data-theme="chic" onclick="setTheme('chic')">
           <div class="theme-preview" style="background:#050505;border:1px solid #c99b35"></div>
           <div class="theme-name">Chic</div>
@@ -596,7 +734,11 @@ canvas{width:100%;height:100%}
 
     <div class="card" style="box-shadow:none;margin-bottom:10px">
       <h3>Couleur du score</h3>
-      <div class="stat-small" style="margin:-4px 0 10px">Le score est vert à partir de ce seuil, orange en dessous.</div>
+
+      <div class="stat-small" style="margin:-4px 0 10px">
+        Le score est vert à partir de ce seuil, orange en dessous.
+      </div>
+
       <div class="oil-input">
         <input id="scoreThreshold" type="number" inputmode="numeric" min="0" max="300" step="1" oninput="onThresholdInput()">
         <span>pts</span>
@@ -604,30 +746,43 @@ canvas{width:100%;height:100%}
     </div>
 
     <div class="settings-list">
+
       <button class="settings-item" onclick="exportData()">
         <span class="settings-icon">↓</span>
-        <span class="settings-main"><span class="settings-title">Télécharger mes données</span></span>
+        <span class="settings-main">
+          <span class="settings-title">Télécharger mes données</span>
+        </span>
         <span class="settings-arrow">›</span>
       </button>
+
       <button class="settings-item" onclick="document.getElementById('dataFile').click()">
         <span class="settings-icon">↑</span>
-        <span class="settings-main"><span class="settings-title">Importer mes données</span></span>
+        <span class="settings-main">
+          <span class="settings-title">Importer mes données</span>
+        </span>
         <span class="settings-arrow">›</span>
       </button>
+
       <input id="dataFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)">
 
       <button class="settings-item" onclick="document.getElementById('friendFile2').click()">
         <span class="settings-icon">⇄</span>
-        <span class="settings-main"><span class="settings-title">Importer les données d'un ami</span></span>
+        <span class="settings-main">
+          <span class="settings-title">Importer les données d'un ami</span>
+        </span>
         <span class="settings-arrow">›</span>
       </button>
+
       <input id="friendFile2" class="hidden" type="file" accept=".json,application/json" onchange="importFriend(event)">
 
       <button class="settings-item" onclick="openAbout()">
         <span class="settings-icon">ⓘ</span>
-        <span class="settings-main"><span class="settings-title">À propos</span></span>
+        <span class="settings-main">
+          <span class="settings-title">À propos</span>
+        </span>
         <span class="settings-arrow">›</span>
       </button>
+
     </div>
   </div>
 </div>
@@ -647,7 +802,12 @@ canvas{width:100%;height:100%}
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('aboutModal')">×</button>
     <div class="modal-title">Bowling Tracker</div>
-    <p style="color:var(--muted);line-height:1.6">Application de suivi de bowling. Les données sont conservées localement dans ton navigateur et peuvent être exportées au format JSON.</p>
+
+    <p style="color:var(--muted);line-height:1.6">
+      Application de suivi de bowling. Les données sont conservées localement
+      dans ton navigateur et peuvent être exportées au format JSON.
+    </p>
+
     <button class="btn full" onclick="closeModal('aboutModal')">Fermer</button>
   </div>
 </div>
@@ -657,25 +817,39 @@ canvas{width:100%;height:100%}
 <script>
 /* =========================================================
    BOWLING TRACKER
-   Tout fonctionne dans un seul fichier HTML.
-   Les données sont stockées dans localStorage.
    ========================================================= */
 
 const STORAGE_KEY = "bowling_tracker_v1";
 const THEME_KEY = "bowling_tracker_theme";
+const FRIENDS_KEY = "bowling_tracker_friends_v2";
 
 let games = [];
-let settings = {scoreThreshold:100};
+
+let settings = {
+  scoreThreshold:100,
+  playerName:"Moi"
+};
+
 let friendGames = [];
+
 let currentView = "calendar";
 let calendarMode = "month";
 let calendarDate = new Date();
+
 let perfRange = {from:"",to:""};
+
 let chartRange = "week";
+let chartMetric = "score";
 
 let currentGame = null;
 let selectedFrame = 0;
 let editingGameId = null;
+
+let tempPins = [];
+let timerRunning = false;
+let timerStart = 0;
+let timerInterval = null;
+let rollTimeValue = "";
 
 /* ---------- OUTILS ---------- */
 
@@ -697,18 +871,17 @@ function dateFromISO(s){
 
 function formatDate(iso){
   return dateFromISO(iso).toLocaleDateString("fr-FR",{
-    weekday:"long",day:"numeric",month:"long",year:"numeric"
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
   });
 }
 
-function formatShortDate(iso){
-  return dateFromISO(iso).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
-}
-
-
 function saveData(){
   localStorage.setItem(STORAGE_KEY,JSON.stringify({
-    version:1,
+    version:2,
+    playerName:settings.playerName,
     games,
     settings,
     savedAt:new Date().toISOString()
@@ -718,61 +891,118 @@ function saveData(){
 function loadData(){
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
+
     if(raw){
       const parsed=JSON.parse(raw);
+
       games=Array.isArray(parsed.games)?parsed.games:[];
+
       const t=Number(parsed.settings?.scoreThreshold);
-      if(Number.isFinite(t)&&t>=0)settings.scoreThreshold=t;
+
+      if(Number.isFinite(t)&&t>=0){
+        settings.scoreThreshold=t;
+      }
+
+      const name=parsed.playerName || parsed.settings?.playerName;
+
+      if(typeof name==="string" && name.trim()){
+        settings.playerName=name.trim();
+      }
     }
   }catch(e){
-    games=[];
-  }
-
-  if(!games.length){
     games=[];
   }
 }
 
 function showToast(message){
   const el=document.getElementById("toast");
+
   el.textContent=message;
   el.classList.add("show");
+
   clearTimeout(showToast.t);
-  showToast.t=setTimeout(()=>el.classList.remove("show"),2200);
+
+  showToast.t=setTimeout(()=>{
+    el.classList.remove("show");
+  },2200);
+}
+
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g,m=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
 }
 
 /* ---------- THÈMES ---------- */
 
 const themes={
   light:{
-    "--bg":"#f4f5f7","--surface":"#ffffff","--surface2":"#eef0f3",
-    "--text":"#16181d","--muted":"#777d87","--border":"#dfe2e7",
-    "--accent":"#1677ff","--success":"#20a464",
-    "--danger":"#e5484d","--gold":"#c99b35",
-    "--orange":"#e8820c","--strike":"#b8860b","--spare":"#7c3aed","--card-hi":"#ffffff"
+    "--bg":"#f4f5f7",
+    "--surface":"#ffffff",
+    "--surface2":"#eef0f3",
+    "--text":"#16181d",
+    "--muted":"#777d87",
+    "--border":"#dfe2e7",
+    "--accent":"#1677ff",
+    "--success":"#20a464",
+    "--danger":"#e5484d",
+    "--gold":"#c99b35",
+    "--orange":"#e8820c",
+    "--strike":"#b8860b",
+    "--spare":"#7c3aed",
+    "--card-hi":"#ffffff"
   },
+
   dark:{
-    "--bg":"#0d1015","--surface":"#151920","--surface2":"#20252d",
-    "--text":"#f3f5f8","--muted":"#9aa2ad","--border":"#2d333d",
-    "--accent":"#4d91ff","--success":"#35c982",
-    "--danger":"#ff6268","--gold":"#d9ad4c",
-    "--orange":"#ff9a3c","--strike":"#f2c14e","--spare":"#a98bff","--card-hi":"#262d38"
+    "--bg":"#0d1015",
+    "--surface":"#151920",
+    "--surface2":"#20252d",
+    "--text":"#f3f5f8",
+    "--muted":"#9aa2ad",
+    "--border":"#2d333d",
+    "--accent":"#4d91ff",
+    "--success":"#35c982",
+    "--danger":"#ff6268",
+    "--gold":"#d9ad4c",
+    "--orange":"#ff9a3c",
+    "--strike":"#f2c14e",
+    "--spare":"#a98bff",
+    "--card-hi":"#262d38"
   },
+
   chic:{
-    "--bg":"#050505","--surface":"#0d0d0d","--surface2":"#171717",
-    "--text":"#f2f2f2","--muted":"#8e8e8e","--border":"#262626",
-    "--accent":"#d2a842","--success":"#55b77d",
-    "--danger":"#db5b5b","--gold":"#d2a842",
-    "--orange":"#f0913a","--strike":"#e6c05a","--spare":"#a98bff","--card-hi":"#1f1f1f"
+    "--bg":"#050505",
+    "--surface":"#0d0d0d",
+    "--surface2":"#171717",
+    "--text":"#f2f2f2",
+    "--muted":"#8e8e8e",
+    "--border":"#262626",
+    "--accent":"#d2a842",
+    "--success":"#55b77d",
+    "--danger":"#db5b5b",
+    "--gold":"#d2a842",
+    "--orange":"#f0913a",
+    "--strike":"#e6c05a",
+    "--spare":"#a98bff",
+    "--card-hi":"#1f1f1f"
   }
 };
 
 function applyTheme(name){
   const root=document.documentElement;
+
   if(themes[name]){
-    Object.entries(themes[name]).forEach(([k,v])=>root.style.setProperty(k,v));
+    Object.entries(themes[name]).forEach(([k,v])=>{
+      root.style.setProperty(k,v);
+    });
   }
+
   localStorage.setItem(THEME_KEY,name);
+
   document.querySelectorAll(".theme-option").forEach(x=>{
     x.classList.toggle("selected",x.dataset.theme===name);
   });
@@ -792,9 +1022,16 @@ function loadTheme(){
 
 function navigate(view){
   currentView=view;
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+
+  document.querySelectorAll(".view").forEach(v=>{
+    v.classList.remove("active");
+  });
+
   document.getElementById("view-"+view).classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===view));
+
+  document.querySelectorAll(".nav-item").forEach(n=>{
+    n.classList.toggle("active",n.dataset.view===view);
+  });
 
   if(view==="calendar")renderCalendar();
   if(view==="performance")renderPerformance();
@@ -808,72 +1045,79 @@ function navigate(view){
 function openModal(id){
   document.getElementById(id).classList.add("show");
 }
+
 function closeModal(id){
   document.getElementById(id).classList.remove("show");
 }
-function openSettings(){syncSettingsUI();openModal("settingsModal")}
-function openAbout(){closeModal("settingsModal");openModal("aboutModal")}
+
+function openSettings(){
+  syncSettingsUI();
+  openModal("settingsModal");
+}
+
+function openAbout(){
+  closeModal("settingsModal");
+  openModal("aboutModal");
+}
 
 /* ---------- SCORE BOWLING ---------- */
 
 function emptyFrame(){
-  return {rolls:[],times:[],pins:[]};
+  return {
+    rolls:[],
+    times:[],
+    pins:[]
+  };
 }
 
 const ALL_PINS=[1,2,3,4,5,6,7,8,9,10];
 
-/* Quilles déjà tombées dans le jeu de quilles actuel (le jeu est remis à
-   zéro après 10 quilles tombées, ex. après un strike au 10e tour). */
 function rackState(f){
   let down=[],unknown=0;
+
   f.rolls.forEach((r,j)=>{
     const ps=f.pins&&f.pins[j];
-    if(ps)down=down.concat(ps);
-    else unknown+=r;
-    if(down.length+unknown>=10){down=[];unknown=0;}
+
+    if(ps){
+      down=down.concat(ps);
+    }else{
+      unknown+=r;
+    }
+
+    if(down.length+unknown>=10){
+      down=[];
+      unknown=0;
+    }
   });
+
   return {down,unknown};
 }
 
 function setRollPins(f,index,pins){
   f.pins=f.pins||[];
-  while(f.pins.length<index)f.pins.push(null);
+
+  while(f.pins.length<index){
+    f.pins.push(null);
+  }
+
   f.pins[index]=pins;
 }
 
 function newCurrentGame(){
+  const now=new Date();
+
   return {
     id:uid(),
-    date:todayISO(),
+    date:todayISO(now),
+    time:String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0"),
     oil:null,
     comment:"",
     frames:Array.from({length:10},()=>emptyFrame())
   };
 }
 
-/*
-  Représentation :
-  frames[0..8] : rolls maximum 2.
-  frame 9 : rolls maximum 3.
-  A strike est [10].
-  Un spare est [x,10-x].
-*/
-
 function isStrike(frame){
   return frame && frame.rolls[0]===10;
-}
-
-
-function frameComplete(i){
-  const f=currentGame.frames[i];
-  if(i<9){
-    return f.rolls.length>=2 || isStrike(f);
-  }
-  if(f.rolls.length<2)return false;
-  if(f.rolls[0]===10 || f.rolls[0]+f.rolls[1]===10){
-    return f.rolls.length>=3;
-  }
-  return true;
 }
 
 function calculateScores(game){
@@ -881,40 +1125,60 @@ function calculateScores(game){
   const scores=[];
   let total=0;
 
-
   const all=[];
-  f.forEach(fr=>fr.rolls.forEach(r=>all.push(r)));
+
+  f.forEach(fr=>{
+    fr.rolls.forEach(r=>all.push(r));
+  });
 
   let pos=0;
+
   for(let i=0;i<10;i++){
+
     const rolls=f[i].rolls;
+
     if(i===9){
-      if(!rolls.length){scores[i]=null;break;}
+
+      if(!rolls.length){
+        scores[i]=null;
+        break;
+      }
+
       total+=rolls.reduce((a,b)=>a+b,0);
       scores[i]=total;
       break;
     }
 
     if(rolls[0]===10){
+
       const bonus1=all[pos+1]??0;
       const bonus2=all[pos+2]??0;
+
       total+=10+bonus1+bonus2;
       scores[i]=total;
       pos+=1;
+
     }else if(rolls.length>=2 && rolls[0]+rolls[1]===10){
+
       const bonus=all[pos+2]??0;
+
       total+=10+bonus;
       scores[i]=total;
       pos+=2;
+
     }else if(rolls.length>=2){
+
       total+=rolls[0]+rolls[1];
       scores[i]=total;
       pos+=2;
+
     }else{
+
       scores[i]=null;
       pos+=rolls.length;
     }
   }
+
   return scores;
 }
 
@@ -923,50 +1187,83 @@ function calculateFinalScore(game){
   return scores[9]??0;
 }
 
-
 function countStrikes(game){
-  return game.frames.reduce((n,f)=>n+(f.rolls[0]===10?1:0),0);
+  return game.frames.reduce((n,f)=>{
+    return n+(f.rolls[0]===10?1:0);
+  },0);
 }
 
 function countSpares(game){
-  return game.frames.reduce((n,f)=>n+(
-    f.rolls.length>=2&&f.rolls[0]!==10&&f.rolls[0]+f.rolls[1]===10?1:0
-  ),0);
+  return game.frames.reduce((n,f)=>{
+    return n+(
+      f.rolls.length>=2 &&
+      f.rolls[0]!==10 &&
+      f.rolls[0]+f.rolls[1]===10
+      ?1:0
+    );
+  },0);
 }
-
 
 function strikeRate(list){
   if(!list.length)return 0;
-  const totalFrames=list.reduce((n,g)=>n+g.frames.filter(f=>f.rolls.length).length,0);
-  return totalFrames?Math.round(list.reduce((n,g)=>n+countStrikes(g),0)/totalFrames*100):0;
+
+  const totalFrames=list.reduce(
+    (n,g)=>n+g.frames.filter(f=>f.rolls.length).length,
+    0
+  );
+
+  return totalFrames
+    ? Math.round(
+        list.reduce((n,g)=>n+countStrikes(g),0)/totalFrames*100
+      )
+    : 0;
 }
 
 function spareRate(list){
   if(!list.length)return 0;
-  const eligible=list.reduce((n,g)=>n+g.frames.filter(f=>f.rolls.length>=2).length,0);
-  return eligible?Math.round(list.reduce((n,g)=>n+countSpares(g),0)/eligible*100):0;
+
+  const eligible=list.reduce(
+    (n,g)=>n+g.frames.filter(f=>f.rolls.length>=2).length,
+    0
+  );
+
+  return eligible
+    ? Math.round(
+        list.reduce((n,g)=>n+countSpares(g),0)/eligible*100
+      )
+    : 0;
 }
 
 function fastestSpeed(list){
   let best=null;
+
   list.forEach(g=>{
     g.frames.forEach(f=>{
       (f.times||[]).forEach(t=>{
-        if(Number(t)>0 && (best===null||Number(t)<best))best=Number(t);
+        if(Number(t)>0 && (best===null||Number(t)<best)){
+          best=Number(t);
+        }
       });
     });
   });
+
   if(best===null)return "—";
+
   return best.toFixed(2)+" s";
 }
 
 function scoreAverage(list){
   if(!list.length)return 0;
-  return Math.round(list.reduce((n,g)=>n+calculateFinalScore(g),0)/list.length);
+
+  return Math.round(
+    list.reduce((n,g)=>n+calculateFinalScore(g),0)/list.length
+  );
 }
 
 function bestScore(list){
-  return list.length?Math.max(...list.map(calculateFinalScore)):0;
+  return list.length
+    ? Math.max(...list.map(calculateFinalScore))
+    : 0;
 }
 
 function sortGames(list){
@@ -981,40 +1278,67 @@ function sortGames(list){
 
 function setCalendarMode(mode){
   calendarMode=mode;
+
   monthBtn.classList.toggle("active",mode==="month");
   weekBtn.classList.toggle("active",mode==="week");
+
   renderCalendar();
 }
 
 function changeCalendar(dir){
+
   if(calendarMode==="month"){
     calendarDate.setMonth(calendarDate.getMonth()+dir);
   }else{
     calendarDate.setDate(calendarDate.getDate()+dir*7);
   }
+
   renderCalendar();
 }
 
-function calendarToday(){calendarDate=new Date();renderCalendar()}
+function calendarToday(){
+  calendarDate=new Date();
+  renderCalendar();
+}
 
 function renderCalendar(){
   const title=document.getElementById("calendarTitle");
 
   if(calendarMode==="month"){
-    title.textContent=calendarDate.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+
+    title.textContent=calendarDate.toLocaleDateString(
+      "fr-FR",
+      {month:"long",year:"numeric"}
+    );
+
     renderMonth();
+
   }else{
+
     const start=startOfWeek(calendarDate);
-    const end=new Date(start);end.setDate(end.getDate()+6);
-    title.textContent=start.toLocaleDateString("fr-FR",{day:"numeric",month:"short"})+
-      " – "+end.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
+    const end=new Date(start);
+
+    end.setDate(end.getDate()+6);
+
+    title.textContent=
+      start.toLocaleDateString("fr-FR",{day:"numeric",month:"short"})+
+      " – "+
+      end.toLocaleDateString("fr-FR",{
+        day:"numeric",
+        month:"short",
+        year:"numeric"
+      });
+
     renderWeek(start);
   }
 
   const monthGames=games.filter(g=>{
     const d=dateFromISO(g.date);
-    return d.getMonth()===calendarDate.getMonth()&&d.getFullYear()===calendarDate.getFullYear();
+
+    return d.getMonth()===calendarDate.getMonth() &&
+           d.getFullYear()===calendarDate.getFullYear();
   });
+
   calGames.textContent=monthGames.length;
   calAverage.textContent=scoreAverage(monthGames)||0;
   calBest.textContent=bestScore(monthGames)||0;
@@ -1023,8 +1347,13 @@ function renderCalendar(){
 function startOfWeek(d){
   const x=new Date(d);
   const day=x.getDay();
-  x.setDate(x.getDate()+(day===0?-6:1-day));
+
+  x.setDate(
+    x.getDate()+(day===0?-6:1-day)
+  );
+
   x.setHours(12,0,0,0);
+
   return x;
 }
 
@@ -1034,86 +1363,185 @@ function gamesOn(date){
 }
 
 function renderMonth(){
-  const y=calendarDate.getFullYear(),m=calendarDate.getMonth();
+
+  const y=calendarDate.getFullYear();
+  const m=calendarDate.getMonth();
+
   const first=new Date(y,m,1);
   const start=startOfWeek(first);
+
   let html='<div class="calendar-weekdays">';
-  ["L","M","M","J","V","S","D"].forEach(x=>html+=`<div>${x}</div>`);
+
+  ["L","M","M","J","V","S","D"].forEach(x=>{
+    html+=`<div>${x}</div>`;
+  });
+
   html+='</div><div class="calendar-grid">';
 
   for(let i=0;i<42;i++){
-    const d=new Date(start);d.setDate(start.getDate()+i);
+
+    const d=new Date(start);
+    d.setDate(start.getDate()+i);
+
     const iso=todayISO(d);
     const count=gamesOn(d).length;
+
     const other=d.getMonth()!==m;
     const today=iso===todayISO();
+
     html+=`
-      <div class="day ${other?"other":""} ${today?"today":""}" data-count="${Math.min(count,5)}" onclick="openDay('${iso}')">
+      <div
+        class="day ${other?"other":""} ${today?"today":""}"
+        data-count="${Math.min(count,5)}"
+        onclick="openDay('${iso}')"
+      >
         <span class="day-num">${d.getDate()}</span>
         <span class="game-count">${count}</span>
-      </div>`;
+      </div>
+    `;
   }
+
   html+='</div>';
+
   document.getElementById("calendarContent").innerHTML=html;
 }
 
 function renderWeek(start){
+
   let html='<div class="week-list">';
+
   for(let i=0;i<7;i++){
-    const d=new Date(start);d.setDate(start.getDate()+i);
+
+    const d=new Date(start);
+    d.setDate(start.getDate()+i);
+
     const list=gamesOn(d);
+
     html+=`
       <div class="week-day" onclick="openDay('${todayISO(d)}')">
-        <div class="wd">${d.toLocaleDateString("fr-FR",{weekday:"short"}).toUpperCase()}</div>
+        <div class="wd">
+          ${d.toLocaleDateString("fr-FR",{weekday:"short"}).toUpperCase()}
+        </div>
+
         <div class="wn">${d.getDate()}</div>
+
         <div class="week-count">${list.length}</div>
-        <div class="stat-small">${list.length===1?"partie":"parties"}</div>
-      </div>`;
+
+        <div class="stat-small">
+          ${list.length===1?"partie":"parties"}
+        </div>
+      </div>
+    `;
   }
+
   html+='</div>';
+
   document.getElementById("calendarContent").innerHTML=html;
 }
 
 function openDay(iso){
+
   const list=games.filter(g=>g.date===iso);
+
   if(!list.length){
     showToast("Aucune partie ce jour");
     return;
   }
+
   navigate("history");
+
   setTimeout(()=>{
-    const first=document.querySelector(`[data-history-date="${iso}"]`);
-    if(first)first.scrollIntoView({behavior:"smooth",block:"start"});
+    const first=document.querySelector(
+      `[data-history-date="${iso}"]`
+    );
+
+    if(first){
+      first.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+    }
   },50);
 }
 
 /* ---------- PERFORMANCES ---------- */
 
+function setPeriodShortcut(days,button){
+
+  const end=new Date();
+  const start=new Date();
+
+  /*
+    "3 derniers jours" signifie aujourd'hui + les 2 jours précédents.
+  */
+  start.setDate(start.getDate()-(days-1));
+
+  const from=todayISO(start);
+  const to=todayISO(end);
+
+  document.getElementById("perfFrom").value=from;
+  document.getElementById("perfTo").value=to;
+
+  perfRange={from,to};
+
+  document.querySelectorAll(".period-shortcuts button")
+    .forEach(b=>b.classList.remove("active"));
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  renderPeriodStats();
+}
+
 function applyPerfRange(){
+
   let from=document.getElementById("perfFrom").value;
   let to=document.getElementById("perfTo").value;
+
   if(from&&to&&from>to){
     [from,to]=[to,from];
+
     document.getElementById("perfFrom").value=from;
     document.getElementById("perfTo").value=to;
   }
+
   perfRange={from,to};
+
+  document.querySelectorAll(".period-shortcuts button")
+    .forEach(b=>b.classList.remove("active"));
+
   renderPeriodStats();
-  showToast(getPeriodGames().length?"Période appliquée":"Aucune partie sur cette période");
+
+  showToast(
+    getPeriodGames().length
+      ? "Période appliquée"
+      : "Aucune partie sur cette période"
+  );
 }
 
 function getPeriodGames(){
+
   const {from,to}=perfRange;
-  return games.filter(g=>(!from||g.date>=from)&&(!to||g.date<=to));
+
+  return games.filter(g=>
+    (!from||g.date>=from) &&
+    (!to||g.date<=to)
+  );
 }
 
 function setText(id,value){
   const el=document.getElementById(id);
-  if(el)el.textContent=value;
+
+  if(el){
+    el.textContent=value;
+  }
 }
 
 function renderPerformance(){
+
   const all=games;
+
   setText("perfTotal",all.length);
   setText("perfAverage",scoreAverage(all)||0);
   setText("perfBest",bestScore(all)||0);
@@ -1125,7 +1553,9 @@ function renderPerformance(){
 }
 
 function renderPeriodStats(){
+
   const p=getPeriodGames();
+
   setText("periodGames",p.length);
   setText("periodAvg",scoreAverage(p)||0);
   setText("periodStrike",strikeRate(p)+"%");
@@ -1134,422 +1564,1097 @@ function renderPeriodStats(){
   setText("periodBest",bestScore(p)||0);
 }
 
-function importFriend(event){
+function normalizeFriendObject(parsed){
+
+  /*
+    Nouveau format :
+    {
+      app:"Bowling Tracker",
+      playerName:"Paul",
+      games:[...]
+    }
+
+    Ancien format :
+    {
+      games:[...]
+    }
+
+    Et ancien import ami :
+    [...]
+  */
+
+  if(Array.isArray(parsed)){
+    return {
+      name:"Ami",
+      games:parsed
+    };
+  }
+
+  if(parsed && Array.isArray(parsed.games)){
+
+    return {
+      name:
+        typeof parsed.playerName==="string" && parsed.playerName.trim()
+          ? parsed.playerName.trim()
+          : (
+              typeof parsed.settings?.playerName==="string" &&
+              parsed.settings.playerName.trim()
+                ? parsed.settings.playerName.trim()
+                : "Ami"
+            ),
+
+      games:parsed.games
+    };
+  }
+
+  throw new Error("Format invalide");
+}
+
+function importFriend(event,target="performance"){
+
   const file=event.target.files?.[0];
+
   if(!file)return;
+
   const reader=new FileReader();
+
   reader.onload=()=>{
+
     try{
+
       const parsed=JSON.parse(reader.result);
-      const imported=Array.isArray(parsed)?parsed:parsed.games;
-      if(!Array.isArray(imported))throw new Error();
-      friendGames=imported.filter(g=>Array.isArray(g.frames));
-      localStorage.setItem("bowling_friend_data",JSON.stringify(friendGames));
-      showToast(`${friendGames.length} parties importées`);
+      const friend=normalizeFriendObject(parsed);
+
+      const valid=friend.games.filter(g=>
+        g &&
+        Array.isArray(g.frames)
+      );
+
+      if(!valid.length){
+        throw new Error();
+      }
+
+      /*
+        Si le même ami est importé à nouveau, on remplace ses anciennes
+        données plutôt que de créer un doublon.
+      */
+      const existingIndex=friendGames.findIndex(
+        f=>f.name.toLowerCase()===friend.name.toLowerCase()
+      );
+
+      const friendObject={
+        id:uid(),
+        name:friend.name,
+        games:valid
+      };
+
+      if(existingIndex>=0){
+        friendObject.id=friendGames[existingIndex].id;
+        friendGames[existingIndex]=friendObject;
+      }else{
+        friendGames.push(friendObject);
+      }
+
+      saveFriends();
+
+      showToast(
+        `${friend.name} • ${valid.length} partie${valid.length>1?"s":""} importée${valid.length>1?"s":""}`
+      );
+
       renderPerformance();
+      renderChart();
+
     }catch(e){
+
       showToast("Fichier JSON invalide");
     }
+
     event.target.value="";
   };
+
   reader.readAsText(file);
 }
 
-function renderComparison(){
-  const area=document.getElementById("compareArea");
+function saveFriends(){
+  localStorage.setItem(
+    FRIENDS_KEY,
+    JSON.stringify(friendGames)
+  );
+}
+
+function loadFriends(){
+
+  try{
+
+    const raw=localStorage.getItem(FRIENDS_KEY);
+
+    if(!raw)return;
+
+    const parsed=JSON.parse(raw);
+
+    /*
+      Migration de l'ancien format :
+      friendGames = [games]
+    */
+    if(Array.isArray(parsed)){
+
+      if(parsed.length===0){
+        friendGames=[];
+      }else if(
+        parsed.every(x=>x && Array.isArray(x.frames))
+      ){
+
+        friendGames=[{
+          id:uid(),
+          name:"Ami",
+          games:parsed
+        }];
+
+      }else{
+
+        friendGames=parsed.filter(
+          x=>x && Array.isArray(x.games)
+        ).map(x=>({
+          id:x.id||uid(),
+          name:x.name||"Ami",
+          games:x.games
+        }));
+      }
+    }
+
+  }catch(e){
+
+    friendGames=[];
+  }
+}
+
+function removeFriend(id){
+
+  friendGames=friendGames.filter(f=>f.id!==id);
+
+  saveFriends();
+
+  renderPerformance();
+  renderChart();
+
+  showToast("Ami retiré");
+}
+
+function clearAllFriends(){
+
   if(!friendGames.length){
-    area.innerHTML=`<div class="empty">Aucune donnée d'ami importée.<br><br><button class="btn primary" onclick="document.getElementById('friendFile').click()">Importer un JSON</button></div>`;
+    showToast("Aucun ami à retirer");
     return;
   }
 
+  if(!confirm("Retirer toutes les personnes comparées ?")){
+    return;
+  }
+
+  friendGames=[];
+  saveFriends();
+
+  renderPerformance();
+  renderChart();
+
+  showToast("Comparaisons supprimées");
+}
+
+function renderComparison(){
+
+  const area=document.getElementById("compareArea");
+
+  if(!friendGames.length){
+
+    area.innerHTML=`
+      <div class="empty">
+        Aucune donnée d'ami importée.
+        <br><br>
+        <button
+          class="btn primary"
+          onclick="document.getElementById('friendFile').click()"
+        >
+          Importer un JSON
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  const people=[
+    {
+      id:"me",
+      name:settings.playerName||"Moi",
+      games:games,
+      removable:false
+    },
+    ...friendGames.map(f=>({
+      id:f.id,
+      name:f.name,
+      games:f.games,
+      removable:true
+    }))
+  ];
+
   area.innerHTML=`
     <div class="compare-grid">
-      <div class="compare-col">
-        <div class="compare-name">Toi</div>
-        ${compareRows(games)}
-      </div>
-      <div class="compare-col">
-        <div class="compare-name">Ton ami</div>
-        ${compareRows(friendGames)}
-      </div>
+      ${people.map(person=>`
+        <div class="compare-col">
+
+          <div class="compare-header">
+            <div class="compare-header-name">
+              ${escapeHTML(person.name)}
+            </div>
+
+            ${
+              person.removable
+              ? `
+                <button
+                  class="compare-remove"
+                  title="Retirer ${escapeHTML(person.name)}"
+                  onclick="removeFriend('${person.id}')"
+                >
+                  ×
+                </button>
+              `
+              : ""
+            }
+          </div>
+
+          ${compareRows(person.games)}
+
+        </div>
+      `).join("")}
     </div>
-    <button class="btn full" style="margin-top:10px" onclick="clearFriend()">Retirer les données de l'ami</button>
   `;
 }
 
 function compareRows(list){
-  return `
-    <div class="compare-row"><span>Parties</span><strong>${list.length}</strong></div>
-    <div class="compare-row"><span>Meilleur score</span><strong>${bestScore(list)}</strong></div>
-    <div class="compare-row"><span>Score moyen</span><strong>${scoreAverage(list)}</strong></div>
-    <div class="compare-row"><span>Strike</span><strong>${strikeRate(list)}%</strong></div>
-    <div class="compare-row"><span>Spare</span><strong>${spareRate(list)}%</strong></div>
-    <div class="compare-row"><span>Boule rapide</span><strong>${fastestSpeed(list)}</strong></div>
-  `;
-}
 
-function clearFriend(){
-  friendGames=[];
-  localStorage.removeItem("bowling_friend_data");
-  renderPerformance();
+  return `
+    <div class="compare-row">
+      <span>Parties</span>
+      <strong>${list.length}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Meilleur score</span>
+      <strong>${bestScore(list)}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Score moyen</span>
+      <strong>${scoreAverage(list)}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Strike</span>
+      <strong>${strikeRate(list)}%</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Spare</span>
+      <strong>${spareRate(list)}%</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Boule rapide</span>
+      <strong>${fastestSpeed(list)}</strong>
+    </div>
+  `;
 }
 
 /* ---------- JOUER ---------- */
 
 function newGame(){
-  if(currentGame && currentGame.frames.some(f=>f.rolls.length)){
-    if(!confirm("Commencer une nouvelle partie ? Les modifications non enregistrées seront perdues."))return;
+
+  if(
+    currentGame &&
+    currentGame.frames.some(f=>f.rolls.length)
+  ){
+
+    if(!confirm(
+      "Commencer une nouvelle partie ? Les modifications non enregistrées seront perdues."
+    )){
+      return;
+    }
   }
+
   currentGame=newCurrentGame();
+
   selectedFrame=0;
+  editingGameId=null;
+
   renderPlay();
 }
 
+function onGameDateTimeInput(){
+
+  if(!currentGame)return;
+
+  currentGame.date=document.getElementById("gameDate").value;
+  currentGame.time=document.getElementById("gameTime").value;
+}
+
 function onOilInput(){
+
   const raw=document.getElementById("gameOil").value;
   const v=parseFloat(raw);
-  currentGame.oil=Number.isFinite(v)?Math.min(100,Math.max(0,v)):null;
+
+  currentGame.oil=Number.isFinite(v)
+    ? Math.min(100,Math.max(0,v))
+    : null;
 }
 
 function scoreClass(score){
-  return score>=settings.scoreThreshold?"score-good":"score-low";
+
+  return score>=settings.scoreThreshold
+    ?"score-good"
+    :"score-low";
 }
 
 function onThresholdInput(){
-  const v=parseInt(document.getElementById("scoreThreshold").value,10);
-  if(!Number.isFinite(v)||v<0||v>300)return;
+
+  const v=parseInt(
+    document.getElementById("scoreThreshold").value,
+    10
+  );
+
+  if(!Number.isFinite(v)||v<0||v>300){
+    return;
+  }
+
   settings.scoreThreshold=v;
+
   saveData();
-  if(currentView==="history")renderHistory();
+
+  if(currentView==="history"){
+    renderHistory();
+  }
+}
+
+function onPlayerNameInput(){
+
+  const input=document.getElementById("playerName");
+
+  settings.playerName=input.value.trim()||"Moi";
+
+  saveData();
+
+  renderPerformance();
+  renderChart();
 }
 
 function syncSettingsUI(){
-  const el=document.getElementById("scoreThreshold");
-  if(el)el.value=settings.scoreThreshold;
+
+  const threshold=document.getElementById("scoreThreshold");
+  const name=document.getElementById("playerName");
+
+  if(threshold){
+    threshold.value=settings.scoreThreshold;
+  }
+
+  if(name){
+    name.value=settings.playerName||"Moi";
+  }
 }
 
 function nowHHMM(){
+
   const d=new Date();
-  return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+
+  return String(d.getHours()).padStart(2,"0")+
+    ":"+
+    String(d.getMinutes()).padStart(2,"0");
 }
 
-/* Heure de la partie : champ "time" si présent, sinon déduite de l'identifiant
-   (qui contient l'horodatage de création), sinon "—". */
 function gameTime(g){
+
   if(g.time)return g.time;
-  const ts=parseInt(String(g.id||"").split("-")[0],36);
-  if(Number.isFinite(ts)&&ts>1577836800000&&ts<=Date.now()+86400000){
+
+  const ts=parseInt(
+    String(g.id||"").split("-")[0],
+    36
+  );
+
+  if(
+    Number.isFinite(ts) &&
+    ts>1577836800000 &&
+    ts<=Date.now()+86400000
+  ){
+
     const d=new Date(ts);
-    return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+
+    return String(d.getHours()).padStart(2,"0")+
+      ":"+
+      String(d.getMinutes()).padStart(2,"0");
   }
+
   return "—";
 }
 
 function oilLabel(g){
-  return Number.isFinite(g.oil)?`Huile ${g.oil}%`:"Huile —";
+
+  return Number.isFinite(g.oil)
+    ? `Huile ${g.oil}%`
+    : "Huile —";
 }
 
 function renderPlay(){
-  if(!currentGame)currentGame=newCurrentGame();
-  document.getElementById("gameOil").value=currentGame.oil??"";
-  document.getElementById("gameComment").value=currentGame.comment||"";
+
+  if(!currentGame){
+    currentGame=newCurrentGame();
+  }
+
+  document.getElementById("gameDate").value=
+    currentGame.date||todayISO();
+
+  document.getElementById("gameTime").value=
+    currentGame.time||nowHHMM();
+
+  document.getElementById("gameOil").value=
+    currentGame.oil??"";
+
+  document.getElementById("gameComment").value=
+    currentGame.comment||"";
+
   renderScoreTable();
   renderFrameEditor();
 }
 
 function renderScoreTable(){
+
   const scores=calculateScores(currentGame);
+
   let html="<thead><tr>";
-  for(let i=0;i<10;i++)html+=`<th class="${i===selectedFrame?"frame-selected":""}" onclick="selectFrame(${i})"><span class="frame-number">${i+1}</span>${renderRollText(currentGame.frames[i],i)}<div class="frame-score">${scores[i]??""}</div></th>`;
+
+  for(let i=0;i<10;i++){
+
+    html+=`
+      <th
+        class="${i===selectedFrame?"frame-selected":""}"
+        onclick="selectFrame(${i})"
+      >
+        <span class="frame-number">${i+1}</span>
+
+        ${renderRollText(currentGame.frames[i],i)}
+
+        <div class="frame-score">
+          ${scores[i]??""}
+        </div>
+      </th>
+    `;
+  }
+
   html+="</tr></thead>";
+
   document.getElementById("scoreTable").innerHTML=html;
 }
 
 function rollSymbols(f,i){
+
   const out=[];
+
   f.rolls.forEach((r,j)=>{
+
     const prev=f.rolls[j-1];
-    if(r===10)out.push('<span class="r r-x">X</span>');
-    else if(j>0&&prev!==10&&prev+r===10)out.push('<span class="r r-s">/</span>');
-    else out.push(`<span class="r">${r===0?"-":r}</span>`);
+
+    if(r===10){
+
+      out.push(
+        '<span class="r r-x">X</span>'
+      );
+
+    }else if(
+      j>0 &&
+      prev!==10 &&
+      prev+r===10
+    ){
+
+      out.push(
+        '<span class="r r-s">/</span>'
+      );
+
+    }else{
+
+      out.push(
+        `<span class="r">${r===0?"-":r}</span>`
+      );
+    }
   });
+
   return out.join(" ");
 }
 
 function renderRollText(f,i){
-  if(!f.rolls.length)return `<div class="rolls">·</div>`;
-  return `<div class="rolls">${rollSymbols(f,i)}</div>`;
+
+  if(!f.rolls.length){
+    return '<div class="rolls">·</div>';
+  }
+
+  return `
+    <div class="rolls">
+      ${rollSymbols(f,i)}
+    </div>
+  `;
 }
 
 function selectFrame(i){
+
   selectedFrame=i;
+
   renderScoreTable();
   renderFrameEditor();
 }
 
 function renderFrameEditor(){
+
   const f=currentGame.frames[selectedFrame];
+
   const maxRolls=selectedFrame===9?3:2;
   const rollCount=f.rolls.length;
+
   const rack=rackState(f);
-  tempPins=tempPins.filter(n=>!rack.down.includes(n));
+
+  tempPins=tempPins.filter(
+    n=>!rack.down.includes(n)
+  );
 
   document.getElementById("frameEditor").innerHTML=`
+
     <div class="between">
-      <div class="selected-title">Tour ${selectedFrame+1}</div>
-      <span class="chip">${rollCount}/${maxRolls} lancer${maxRolls>1?"s":""}</span>
+
+      <div class="selected-title">
+        Tour ${selectedFrame+1}
+      </div>
+
+      <span class="chip">
+        ${rollCount}/${maxRolls} lancer${maxRolls>1?"s":""}
+      </span>
+
     </div>
 
     <div class="quick-rolls">
-      <button class="btn primary" onclick="setStrike()">🎳 Strike</button>
-      <button class="btn" onclick="setSpare()">Spare</button>
-      <button class="btn" onclick="clearFrame()">Effacer</button>
+
+      <button class="btn primary" onclick="setStrike()">
+        🎳 Strike
+      </button>
+
+      <button class="btn" onclick="setSpare()">
+        Spare
+      </button>
+
+      <button class="btn" onclick="clearFrame()">
+        Effacer
+      </button>
+
     </div>
 
     <div class="pin-layout" id="pinLayout">
-      ${Array.from({length:10},(_,i)=>`<button class="pin" data-pin="${i+1}" onclick="togglePin(${i+1})">${i+1}</button>`).join("")}
-      <div class="pin-label">Sélectionne les quilles tombées</div>
+
+      ${Array.from({length:10},(_,i)=>`
+        <button
+          class="pin"
+          data-pin="${i+1}"
+          onclick="togglePin(${i+1})"
+        >
+          ${i+1}
+        </button>
+      `).join("")}
+
+      <div class="pin-label">
+        Sélectionne les quilles tombées
+      </div>
+
     </div>
 
     <div class="between" style="margin-bottom:8px">
-      <span class="stat-small">Quilles tombées : <strong id="pinCount">0</strong>/10</span>
-      <button class="btn success" onclick="validatePins()">✓ Valider le lancer</button>
+
+      <span class="stat-small">
+        Quilles tombées :
+        <strong id="pinCount">0</strong>/10
+      </span>
+
+      <button class="btn success" onclick="validatePins()">
+        ✓ Valider le lancer
+      </button>
+
     </div>
 
     <div class="timer-input">
+
       <div class="field" style="margin:0">
-        <label>Temps boule → quilles (secondes)</label>
-        <input id="rollTime" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="ex. 2.35" value="${rollTimeValue}" oninput="rollTimeValue=this.value">
+
+        <label>
+          Temps boule → quilles (secondes)
+        </label>
+
+        <input
+          id="rollTime"
+          type="number"
+          inputmode="decimal"
+          min="0.01"
+          step="0.01"
+          placeholder="ex. 2.35"
+          value="${rollTimeValue}"
+          oninput="rollTimeValue=this.value"
+        >
+
       </div>
-      <button class="btn" id="timerBtn" onclick="startTimer()">⏱ ${timerRunning?"Arrêter":"Chrono"}</button>
+
+      <button class="btn" id="timerBtn" onclick="startTimer()">
+        ⏱ ${timerRunning?"Arrêter":"Chrono"}
+      </button>
+
     </div>
 
-    ${f.rolls.length?`
-      <div style="margin-top:12px">
-        <div class="stat-small">Lancers enregistrés</div>
-        <div class="row" style="margin-top:6px">
-          ${f.rolls.map((r,i)=>`<div class="chip">Lancer ${i+1}: ${r===10?"Strike":r}</div>`).join("")}
+    ${
+      f.rolls.length
+      ? `
+        <div style="margin-top:12px">
+
+          <div class="stat-small">
+            Lancers enregistrés
+          </div>
+
+          <div class="row" style="margin-top:6px">
+
+            ${f.rolls.map((r,i)=>`
+              <div class="chip">
+                Lancer ${i+1}:
+                ${r===10?"Strike":r}
+              </div>
+            `).join("")}
+
+          </div>
+
         </div>
-      </div>`:""}
+      `
+      :""
+    }
   `;
 
   updatePinsFromTemp();
 }
 
-let tempPins=[];
-let timerRunning=false;
-let timerStart=0;
-let timerInterval=null;
-let rollTimeValue="";
-
 function togglePin(n){
+
   const f=currentGame.frames[selectedFrame];
   const rack=rackState(f);
+
   if(rack.down.includes(n)){
+
     showToast("Cette quille est déjà tombée");
     return;
   }
+
   const idx=tempPins.indexOf(n);
-  if(idx<0&&tempPins.length+rack.down.length+rack.unknown>=10)return;
-  if(idx>=0)tempPins.splice(idx,1);
-  else tempPins.push(n);
+
+  if(
+    idx<0 &&
+    tempPins.length+rack.down.length+rack.unknown>=10
+  ){
+    return;
+  }
+
+  if(idx>=0){
+    tempPins.splice(idx,1);
+  }else{
+    tempPins.push(n);
+  }
+
   tempPins.sort((a,b)=>a-b);
+
   updatePinsFromTemp();
 }
 
 function updatePinsFromTemp(){
+
   const layout=document.getElementById("pinLayout");
+
   if(!layout)return;
-  const down=rackState(currentGame.frames[selectedFrame]).down;
+
+  const down=rackState(
+    currentGame.frames[selectedFrame]
+  ).down;
+
   layout.querySelectorAll(".pin").forEach(p=>{
+
     const n=Number(p.dataset.pin);
-    p.classList.toggle("selected",tempPins.includes(n));
-    p.classList.toggle("down",down.includes(n));
+
+    p.classList.toggle(
+      "selected",
+      tempPins.includes(n)
+    );
+
+    p.classList.toggle(
+      "down",
+      down.includes(n)
+    );
   });
+
   const count=document.getElementById("pinCount");
-  if(count)count.textContent=tempPins.length;
+
+  if(count){
+    count.textContent=tempPins.length;
+  }
 }
 
-
 function validatePins(){
+
   const f=currentGame.frames[selectedFrame];
+
   const fallen=tempPins.length;
   const pins=tempPins.slice();
 
   function addRoll(count){
+
     f.rolls.push(count);
+
     f.times=f.times||[];
+
     f.times.push(getRollTime());
-    setRollPins(f,f.rolls.length-1,pins);
+
+    setRollPins(
+      f,
+      f.rolls.length-1,
+      pins
+    );
   }
 
   if(f.rolls.length===0){
+
     if(fallen===10){
       setStrike();
       return;
     }
+
     addRoll(fallen);
+
   }else if(f.rolls.length===1){
+
     if(f.rolls[0]===10){
+
       if(selectedFrame<9){
         showToast("Ce tour est déjà un strike");
         return;
       }
+
       addRoll(fallen);
+
     }else{
+
       if(f.rolls[0]+fallen>10){
         showToast("Impossible : plus de 10 quilles dans ce tour");
         return;
       }
+
       addRoll(fallen);
     }
-  }else if(selectedFrame===9&&f.rolls.length===2){
-    if(f.rolls[0]===10||f.rolls[0]+f.rolls[1]===10){
+
+  }else if(
+    selectedFrame===9 &&
+    f.rolls.length===2
+  ){
+
+    if(
+      f.rolls[0]===10 ||
+      f.rolls[0]+f.rolls[1]===10
+    ){
+
       addRoll(fallen);
+
     }else{
+
       showToast("Le tour est terminé");
       return;
     }
+
   }else{
+
     showToast("Tour terminé");
     return;
   }
 
   tempPins=[];
+
   renderPlay();
 }
 
 function getRollTime(){
+
   const v=parseFloat(rollTimeValue);
+
   rollTimeValue="";
-  return Number.isFinite(v)&&v>0?v:null;
+
+  return Number.isFinite(v)&&v>0
+    ?v
+    :null;
 }
 
 function setStrike(){
+
   const f=currentGame.frames[selectedFrame];
 
   if(selectedFrame<9){
+
     f.rolls=[10];
     f.times=[getRollTime()];
     f.pins=[ALL_PINS.slice()];
+
     currentGame.frames[selectedFrame]=f;
+
     tempPins=[];
-    // Le strike est directement visible dans la case du tour,
-    // et le tour suivant reste disponible.
-    if(selectedFrame<9)selectedFrame++;
+
+    selectedFrame++;
+
     renderPlay();
+
     showToast("Strike 🎳");
+
     return;
   }
 
-  // 10e frame
   if(f.rolls.length===0){
+
     f.rolls=[10];
     f.times=[getRollTime()];
-    setRollPins(f,0,ALL_PINS.slice());
+    setRollPins(
+      f,
+      0,
+      ALL_PINS.slice()
+    );
+
   }else if(f.rolls.length<3){
+
     const rack=rackState(f);
-    if(rack.down.length+rack.unknown>0){
-      showToast("Des quilles sont déjà tombées : utilise Spare ou les quilles");
+
+    if(
+      rack.down.length+rack.unknown>0
+    ){
+
+      showToast(
+        "Des quilles sont déjà tombées : utilise les quilles"
+      );
+
       return;
     }
+
     f.rolls.push(10);
+
     f.times=f.times||[];
+
     f.times.push(getRollTime());
-    setRollPins(f,f.rolls.length-1,ALL_PINS.slice());
+
+    setRollPins(
+      f,
+      f.rolls.length-1,
+      ALL_PINS.slice()
+    );
   }
+
   tempPins=[];
+
   renderPlay();
 }
 
 function remainingPins(f){
+
   const first=f.pins&&f.pins[0];
-  return first?ALL_PINS.filter(n=>!first.includes(n)):null;
+
+  return first
+    ?ALL_PINS.filter(n=>!first.includes(n))
+    :null;
 }
 
 function setSpare(){
+
   const f=currentGame.frames[selectedFrame];
 
   if(selectedFrame===9){
+
     if(f.rolls.length===0){
+
       f.rolls=[0,10];
       f.times=[null,getRollTime()];
       f.pins=[[],ALL_PINS.slice()];
-    }else if(f.rolls.length===1 && f.rolls[0]!==10){
-      f.rolls.push(10-f.rolls[0]);
+
+    }else if(
+      f.rolls.length===1 &&
+      f.rolls[0]!==10
+    ){
+
+      f.rolls.push(
+        10-f.rolls[0]
+      );
+
       f.times=f.times||[];
-      f.times.push(getRollTime());
-      setRollPins(f,1,remainingPins(f));
+
+      f.times.push(
+        getRollTime()
+      );
+
+      setRollPins(
+        f,
+        1,
+        remainingPins(f)
+      );
+
     }else{
-      showToast("Spare impossible dans cet état");
+
+      showToast(
+        "Spare impossible dans cet état"
+      );
+
       return;
     }
+
   }else{
+
     if(f.rolls.length===0){
-      showToast("Un spare nécessite un premier lancer");
+
+      showToast(
+        "Un spare nécessite un premier lancer"
+      );
+
       return;
     }
+
     if(f.rolls[0]===10){
-      showToast("Impossible de faire Strike + Spare dans le même tour");
+
+      showToast(
+        "Impossible de faire Strike + Spare dans le même tour"
+      );
+
       return;
     }
+
     const rest=remainingPins(f);
-    f.rolls=[f.rolls[0],10-f.rolls[0]];
+
+    f.rolls=[
+      f.rolls[0],
+      10-f.rolls[0]
+    ];
+
     f.times=f.times||[];
-    if(f.times.length<2)f.times.push(getRollTime());
-    setRollPins(f,1,rest);
+
+    if(f.times.length<2){
+      f.times.push(getRollTime());
+    }
+
+    setRollPins(
+      f,
+      1,
+      rest
+    );
+
     currentGame.frames[selectedFrame]=f;
-    selectedFrame=Math.min(9,selectedFrame+1);
+
+    selectedFrame=Math.min(
+      9,
+      selectedFrame+1
+    );
+
     renderPlay();
+
     showToast("Spare ✓");
+
     return;
   }
 
   currentGame.frames[selectedFrame]=f;
+
   renderPlay();
 }
 
 function clearFrame(){
+
   currentGame.frames[selectedFrame]=emptyFrame();
+
   tempPins=[];
+
   renderPlay();
 }
 
-
 function startTimer(){
+
   const btn=document.getElementById("timerBtn");
   const input=document.getElementById("rollTime");
 
   if(timerRunning){
+
     timerRunning=false;
+
     clearInterval(timerInterval);
+
     timerInterval=null;
-    rollTimeValue=((performance.now()-timerStart)/1000).toFixed(2);
-    if(input)input.value=rollTimeValue;
-    if(btn)btn.textContent="⏱ Chrono";
+
+    rollTimeValue=(
+      (performance.now()-timerStart)/1000
+    ).toFixed(2);
+
+    if(input){
+      input.value=rollTimeValue;
+    }
+
+    if(btn){
+      btn.textContent="⏱ Chrono";
+    }
+
     return;
   }
 
   timerRunning=true;
+
   timerStart=performance.now();
+
   rollTimeValue="";
-  if(input)input.value="";
-  if(btn)btn.textContent="⏱ Arrêter";
+
+  if(input){
+    input.value="";
+  }
+
+  if(btn){
+    btn.textContent="⏱ Arrêter";
+  }
 
   timerInterval=setInterval(()=>{
-    rollTimeValue=((performance.now()-timerStart)/1000).toFixed(2);
+
+    rollTimeValue=(
+      (performance.now()-timerStart)/1000
+    ).toFixed(2);
+
     const el=document.getElementById("rollTime");
-    if(el)el.value=rollTimeValue;
+
+    if(el){
+      el.value=rollTimeValue;
+    }
+
   },50);
 }
 
 function saveCurrentGame(){
-  onOilInput();
-  currentGame.comment=document.getElementById("gameComment").value.trim();
 
-  if(!currentGame.time||!editingGameId)currentGame.time=nowHHMM();
-  const hasData=currentGame.frames.some(f=>f.rolls.length);
+  onOilInput();
+
+  currentGame.date=
+    document.getElementById("gameDate").value ||
+    todayISO();
+
+  currentGame.time=
+    document.getElementById("gameTime").value ||
+    nowHHMM();
+
+  currentGame.comment=
+    document.getElementById("gameComment").value.trim();
+
+  const hasData=currentGame.frames.some(
+    f=>f.rolls.length
+  );
+
   if(!hasData){
+
     showToast("Ajoute au moins un lancer");
     return;
   }
@@ -1557,26 +2662,52 @@ function saveCurrentGame(){
   const score=calculateFinalScore(currentGame);
 
   if(editingGameId){
-    const index=games.findIndex(g=>g.id===editingGameId);
-    if(index>=0)games[index]=JSON.parse(JSON.stringify(currentGame));
+
+    const index=games.findIndex(
+      g=>g.id===editingGameId
+    );
+
+    if(index>=0){
+      games[index]=JSON.parse(
+        JSON.stringify(currentGame)
+      );
+    }
+
     editingGameId=null;
+
   }else{
-    games.push(JSON.parse(JSON.stringify(currentGame)));
+
+    games.push(
+      JSON.parse(
+        JSON.stringify(currentGame)
+      )
+    );
   }
 
   saveData();
-  showToast(`Partie enregistrée • ${score} points`);
+
+  showToast(
+    `Partie enregistrée • ${score} points`
+  );
+
   currentGame=newCurrentGame();
+
   selectedFrame=0;
+
   navigate("history");
 }
 
 /* ---------- HISTORIQUE ---------- */
 
 function renderHistory(){
+
   const container=document.getElementById("historyList");
+
   if(!games.length){
-    container.innerHTML='<div class="card empty">Aucune partie enregistrée.</div>';
+
+    container.innerHTML=
+      '<div class="card empty">Aucune partie enregistrée.</div>';
+
     return;
   }
 
@@ -1584,81 +2715,202 @@ function renderHistory(){
   const groups={};
 
   sorted.forEach(g=>{
-    if(!groups[g.date])groups[g.date]=[];
+
+    if(!groups[g.date]){
+      groups[g.date]=[];
+    }
+
     groups[g.date].push(g);
   });
 
   let html="";
-  Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
-    const list=groups[date];
-    html+=`
-      <div class="history-day-title" data-history-date="${date}">
-        <span>${formatDate(date)}</span>
-      </div>`;
 
-    list.forEach(g=>{
-      const score=calculateFinalScore(g);
+  Object.keys(groups)
+    .sort((a,b)=>b.localeCompare(a))
+    .forEach(date=>{
+
+      const list=groups[date];
+
       html+=`
-        <div class="card game-card" onclick="openGameDetail('${g.id}')">
-          <div class="between">
-            <div>
-              <div class="game-date">🕒 ${gameTime(g)}</div>
-              <div class="game-meta">
-                <span class="chip strike">${countStrikes(g)}X</span>
-                <span class="chip spare">${countSpares(g)}/</span>
-                <span class="chip">${oilLabel(g)}</span>
+        <div
+          class="history-day-title"
+          data-history-date="${date}"
+        >
+          <span>${formatDate(date)}</span>
+        </div>
+      `;
+
+      list.forEach(g=>{
+
+        const score=calculateFinalScore(g);
+
+        html+=`
+          <div
+            class="card game-card"
+            onclick="openGameDetail('${g.id}')"
+          >
+
+            <div class="between">
+
+              <div>
+
+                <div class="game-date">
+                  🕒 ${gameTime(g)}
+                </div>
+
+                <div class="game-meta">
+
+                  <span class="chip strike">
+                    ${countStrikes(g)}X
+                  </span>
+
+                  <span class="chip spare">
+                    ${countSpares(g)}/
+                  </span>
+
+                  <span class="chip">
+                    ${oilLabel(g)}
+                  </span>
+
+                </div>
+
               </div>
+
+              <div style="text-align:right">
+
+                <div class="game-score ${scoreClass(score)}">
+                  ${score}
+                </div>
+
+                <div class="stat-small">
+                  points
+                </div>
+
+              </div>
+
             </div>
-            <div style="text-align:right">
-              <div class="game-score ${scoreClass(score)}">${score}</div>
-              <div class="stat-small">points</div>
-            </div>
+
           </div>
-        </div>`;
+        `;
+      });
     });
-  });
 
   container.innerHTML=html;
 }
 
 function openGameDetail(id){
+
   const game=games.find(g=>g.id===id);
+
   if(!game)return;
 
   const scores=calculateScores(game);
+
   const rollHTML=game.frames.map((f,i)=>`
-    <button class="tour-button" onclick="openTourFromHistory('${game.id}',${i})">
+    <button
+      class="tour-button"
+      onclick="openTourFromHistory('${game.id}',${i})"
+    >
       <strong>Tour ${i+1}</strong>
       <span>${f.rolls.length?formatFrameRolls(f,i):"—"}</span>
       <b>${scores[i]??""}</b>
-    </button>`).join("");
+    </button>
+  `).join("");
 
   document.getElementById("detailContent").innerHTML=`
-    <button class="modal-close" onclick="closeModal('detailModal')">×</button>
-    <div class="stat-small" style="text-align:center">${formatDate(game.date)}</div>
-    <div class="detail-score ${scoreClass(calculateFinalScore(game))}">${calculateFinalScore(game)}</div>
+
+    <button
+      class="modal-close"
+      onclick="closeModal('detailModal')"
+    >
+      ×
+    </button>
+
+    <div class="stat-small" style="text-align:center">
+      ${formatDate(game.date)} • ${gameTime(game)}
+    </div>
+
+    <div class="detail-score ${scoreClass(calculateFinalScore(game))}">
+      ${calculateFinalScore(game)}
+    </div>
+
     <div class="detail-meta">
-      <span class="chip">💧 ${oilLabel(game)}</span>
-      <span class="chip strike">${countStrikes(game)}X</span>
-      <span class="chip spare">${countSpares(game)}/</span>
-      <span class="chip">⚡ ${fastestSpeed([game])}</span>
+
+      <span class="chip">
+        💧 ${oilLabel(game)}
+      </span>
+
+      <span class="chip strike">
+        ${countStrikes(game)}X
+      </span>
+
+      <span class="chip spare">
+        ${countSpares(game)}/
+      </span>
+
+      <span class="chip">
+        ⚡ ${fastestSpeed([game])}
+      </span>
+
     </div>
 
-    <div class="frame-grid">${game.frames.map((f,i)=>`
-      <div class="fg-cell"><div class="fg-num">${i+1}</div><div class="fg-rolls">${formatFrameRolls(f,i)}</div><div class="fg-score">${scores[i]??""}</div></div>`).join("")}
+    <div class="frame-grid">
+      ${game.frames.map((f,i)=>`
+        <div class="fg-cell">
+
+          <div class="fg-num">
+            ${i+1}
+          </div>
+
+          <div class="fg-rolls">
+            ${formatFrameRolls(f,i)}
+          </div>
+
+          <div class="fg-score">
+            ${scores[i]??""}
+          </div>
+
+        </div>
+      `).join("")}
     </div>
 
-    <h3 style="margin-top:18px">Détail des tours</h3>
-    <div class="tour-list">${rollHTML}</div>
+    <h3 style="margin-top:18px">
+      Détail des tours
+    </h3>
 
-    <div class="card" style="margin-top:15px;background:var(--surface2);box-shadow:none">
+    <div class="tour-list">
+      ${rollHTML}
+    </div>
+
+    <div
+      class="card"
+      style="margin-top:15px;background:var(--surface2);box-shadow:none"
+    >
+
       <label>Commentaire</label>
-      <div style="white-space:pre-wrap;font-size:13px">${escapeHTML(game.comment||"Aucun commentaire.")}</div>
+
+      <div style="white-space:pre-wrap;font-size:13px">
+        ${escapeHTML(game.comment||"Aucun commentaire.")}
+      </div>
+
     </div>
 
     <div class="modal-actions">
-      <button class="btn primary" onclick="editGame('${game.id}')">Modifier la partie</button>
-      <button class="btn danger" onclick="deleteGame('${game.id}')">Supprimer</button>
+
+      <button
+        class="btn primary"
+        onclick="editGame('${game.id}')"
+      >
+        Modifier la partie
+      </button>
+
+      <button
+        class="btn danger"
+        onclick="deleteGame('${game.id}')"
+      >
+        Supprimer
+      </button>
+
     </div>
   `;
 
@@ -1666,333 +2918,972 @@ function openGameDetail(id){
 }
 
 function formatFrameRolls(f,i){
-  if(!f.rolls.length)return "—";
+
+  if(!f.rolls.length){
+    return "—";
+  }
+
   return rollSymbols(f,i);
 }
 
-function escapeHTML(str){
-  return String(str).replace(/[&<>"']/g,m=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-
 function openTourFromHistory(gameId,frameIndex){
+
   const game=games.find(g=>g.id===gameId);
+
   if(!game)return;
+
   const f=game.frames[frameIndex];
 
   const pinsByRoll=[];
+
   f.rolls.forEach((r,i)=>{
-    const label=r===10?"Strike":`${r} quille${r>1?"s":""}`;
-    pinsByRoll.push(`<div class="card" style="box-shadow:none;background:var(--surface2)">
-      <div class="between"><strong>Lancer ${i+1}</strong><span class="chip">${label}</span></div>
-      <div class="stat-small" style="margin-top:6px">Temps : ${f.times?.[i]?Number(f.times[i]).toFixed(2)+" s":"—"}</div>
-    </div>`);
+
+    const label=
+      r===10
+      ?"Strike"
+      :`${r} quille${r>1?"s":""}`;
+
+    pinsByRoll.push(`
+      <div
+        class="card"
+        style="box-shadow:none;background:var(--surface2)"
+      >
+
+        <div class="between">
+          <strong>Lancer ${i+1}</strong>
+          <span class="chip">${label}</span>
+        </div>
+
+        <div class="stat-small" style="margin-top:6px">
+          Temps :
+          ${
+            f.times?.[i]
+              ?Number(f.times[i]).toFixed(2)+" s"
+              :"—"
+          }
+        </div>
+
+      </div>
+    `);
   });
 
   document.getElementById("tourContent").innerHTML=`
-    <button class="modal-close" onclick="closeModal('tourModal')">×</button>
-    <div class="modal-title">Tour ${frameIndex+1}</div>
+
+    <button
+      class="modal-close"
+      onclick="closeModal('tourModal')"
+    >
+      ×
+    </button>
+
+    <div class="modal-title">
+      Tour ${frameIndex+1}
+    </div>
+
     ${pinsByRoll.join("")}
-    <button class="btn primary full" onclick="closeModal('tourModal')">Fermer</button>
+
+    <button
+      class="btn primary full"
+      onclick="closeModal('tourModal')"
+    >
+      Fermer
+    </button>
   `;
+
   openModal("tourModal");
 }
 
 function editGame(id){
+
   const game=games.find(g=>g.id===id);
+
   if(!game)return;
 
   closeModal("detailModal");
-  currentGame=JSON.parse(JSON.stringify(game));
+
+  currentGame=JSON.parse(
+    JSON.stringify(game)
+  );
+
   editingGameId=id;
   selectedFrame=0;
+
   navigate("play");
+
   showToast("Mode modification");
 }
 
 function deleteGame(id){
-  if(!confirm("Supprimer définitivement cette partie ?"))return;
-  games=games.filter(g=>g.id!==id);
-  saveData();
-  closeModal("detailModal");
-  renderHistory();
-  showToast("Partie supprimée");
-}
 
-/* ---------- GRAPHIQUE ---------- */
-
-function setChartRange(range,button){
-  chartRange=range;
-  document.querySelectorAll(".chart-controls button").forEach(b=>b.classList.remove("active"));
-  button.classList.add("active");
-  renderChart();
-}
-
-function renderChart(){
-  const canvas=document.getElementById("scoreChart");
-  if(!canvas)return;
-
-  const rect=canvas.getBoundingClientRect();
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=Math.max(300,rect.width*dpr);
-  canvas.height=Math.max(240,rect.height*dpr);
-
-  const ctx=canvas.getContext("2d");
-  ctx.scale(dpr,dpr);
-  const W=rect.width,H=rect.height;
-
-  ctx.clearRect(0,0,W,H);
-
-  const points=makeChartPoints();
-  const scores=points.map(p=>p.score).filter(v=>v!==null);
-
-  chartMax.textContent=scores.length?Math.max(...scores):0;
-  chartMin.textContent=scores.length?Math.min(...scores):0;
-  chartAvg.textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
-
-  const styles=getComputedStyle(document.documentElement);
-  const text=styles.getPropertyValue("--muted").trim();
-  const border=styles.getPropertyValue("--border").trim();
-  const accent=styles.getPropertyValue("--accent").trim();
-
-  const pad={l:38,r:14,t:18,b:36};
-  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
-  const max=Math.max(300,...scores);
-  const min=Math.min(0,...scores);
-  const range=Math.max(1,max-min);
-
-  ctx.font="10px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
-  ctx.strokeStyle=border;
-  ctx.fillStyle=text;
-
-  for(let i=0;i<=4;i++){
-    const y=pad.t+ch*i/4;
-    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
-    const value=Math.round(max-(max-min)*i/4);
-    ctx.fillText(value,4,y+3);
-  }
-
-  if(!points.length){
-    ctx.fillStyle=text;
-    ctx.textAlign="center";
-    ctx.font="13px sans-serif";
-    ctx.fillText("Pas encore assez de données",W/2,H/2);
-    ctx.textAlign="left";
+  if(!confirm(
+    "Supprimer définitivement cette partie ?"
+  )){
     return;
   }
 
-  const plotted=points.filter(p=>p.score!==null);
-  if(!plotted.length)return;
+  games=games.filter(g=>g.id!==id);
 
-  const xFor=i=>plotted.length===1?pad.l+cw/2:pad.l+cw*i/(plotted.length-1);
-  const yFor=v=>pad.t+(max-v)/range*ch;
+  saveData();
 
-  // aire
-  const gradient=ctx.createLinearGradient(0,pad.t,0,H);
-  gradient.addColorStop(0,accent+"55");
-  gradient.addColorStop(1,accent+"00");
+  closeModal("detailModal");
 
-  ctx.beginPath();
-  plotted.forEach((p,i)=>{
-    const x=xFor(i),y=yFor(p.score);
-    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-  });
-  ctx.lineTo(xFor(plotted.length-1),pad.t+ch);
-  ctx.lineTo(xFor(0),pad.t+ch);
-  ctx.closePath();
-  ctx.fillStyle=gradient;
-  ctx.fill();
+  renderHistory();
 
-  // ligne
-  ctx.beginPath();
-  plotted.forEach((p,i)=>{
-    const x=xFor(i),y=yFor(p.score);
-    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle=accent;
-  ctx.lineWidth=3;
-  ctx.lineJoin="round";
-  ctx.stroke();
-
-  plotted.forEach((p,i)=>{
-    const x=xFor(i),y=yFor(p.score);
-    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
-    ctx.fillStyle=accent;ctx.fill();
-    ctx.strokeStyle=styles.getPropertyValue("--surface").trim();
-    ctx.lineWidth=2;ctx.stroke();
-  });
-
-  ctx.fillStyle=text;
-  ctx.font="10px sans-serif";
-  ctx.textAlign="center";
-  const labels=plotted.length<=7?plotted:plotted.filter((_,i)=>i===0||i===plotted.length-1||i%Math.ceil(plotted.length/5)===0);
-  labels.forEach(p=>{
-    const i=plotted.indexOf(p);
-    ctx.fillText(p.label,xFor(i),H-12);
-  });
-  ctx.textAlign="left";
+  showToast("Partie supprimée");
 }
 
-function makeChartPoints(){
-  // 1 semaine = 7 derniers jours, 1 mois = 30 derniers jours (un point par jour)
+/* =========================================================
+   GRAPHIQUE EN BARRES + COMPARAISON
+   ========================================================= */
+
+function setChartRange(range,button){
+
+  chartRange=range;
+
+  document.querySelectorAll(".chart-controls button")
+    .forEach(b=>b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  renderChart();
+}
+
+function setChartMetric(metric,button){
+
+  chartMetric=metric;
+
+  document.querySelectorAll(".chart-metric-controls button")
+    .forEach(b=>b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  renderChart();
+}
+
+function getMetricLabel(){
+
+  if(chartMetric==="strike"){
+    return "Taux de strikes (%)";
+  }
+
+  if(chartMetric==="spare"){
+    return "Taux de spares (%)";
+  }
+
+  return "Score";
+}
+
+function getMetricValue(list){
+
+  if(!list.length)return null;
+
+  if(chartMetric==="strike"){
+    return strikeRate(list);
+  }
+
+  if(chartMetric==="spare"){
+    return spareRate(list);
+  }
+
+  return scoreAverage(list);
+}
+
+function getChartMaxValue(){
+
+  if(
+    chartMetric==="strike" ||
+    chartMetric==="spare"
+  ){
+    return 100;
+  }
+
+  return 300;
+}
+
+function getChartDataForGames(list){
+
   if(chartRange==="week"||chartRange==="month"){
-    const n=chartRange==="week"?7:30;
+
+    const n=chartRange==="week"
+      ?7
+      :30;
+
     const out=[];
+
     for(let i=n-1;i>=0;i--){
-      const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-i);
-      const list=gamesOn(d);
+
+      const d=new Date();
+
+      d.setHours(12,0,0,0);
+      d.setDate(d.getDate()-i);
+
+      const iso=todayISO(d);
+
+      const dayGames=list.filter(
+        g=>g.date===iso
+      );
+
       out.push({
-        label:d.toLocaleDateString("fr-FR",{day:"numeric",month:"short"}),
-        score:list.length?scoreAverage(list):null
+        label:d.toLocaleDateString(
+          "fr-FR",
+          {
+            day:"numeric",
+            month:"short"
+          }
+        ),
+        value:getMetricValue(dayGames)
       });
     }
+
     return out;
   }
 
-  // 1 année = 12 derniers mois (un point par mois)
   const out=[];
   const now=new Date();
+
   for(let i=11;i>=0;i--){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    const list=games.filter(g=>{
+
+    const d=new Date(
+      now.getFullYear(),
+      now.getMonth()-i,
+      1
+    );
+
+    const monthGames=list.filter(g=>{
+
       const gd=dateFromISO(g.date);
-      return gd.getFullYear()===d.getFullYear()&&gd.getMonth()===d.getMonth();
+
+      return gd.getFullYear()===d.getFullYear() &&
+             gd.getMonth()===d.getMonth();
     });
+
     out.push({
-      label:d.toLocaleDateString("fr-FR",{month:"short"}),
-      score:list.length?scoreAverage(list):null
+      label:d.toLocaleDateString(
+        "fr-FR",
+        {month:"short"}
+      ),
+      value:getMetricValue(monthGames)
     });
   }
+
   return out;
+}
+
+function getChartPeople(){
+
+  return [
+    {
+      id:"me",
+      name:settings.playerName||"Moi",
+      games:games,
+      color:getComputedStyle(document.documentElement)
+        .getPropertyValue("--accent").trim()
+    },
+
+    ...friendGames.map((friend,index)=>{
+
+      const colors=[
+        "#20a464",
+        "#e8820c",
+        "#7c3aed",
+        "#e5484d",
+        "#c99b35",
+        "#00a6a6",
+        "#e056fd",
+        "#4d91ff"
+      ];
+
+      return {
+        id:friend.id,
+        name:friend.name||"Ami",
+        games:friend.games,
+        color:colors[index%colors.length]
+      };
+    })
+  ];
+}
+
+function renderChart(){
+
+  const canvas=document.getElementById("scoreChart");
+
+  if(!canvas)return;
+
+  const rect=canvas.getBoundingClientRect();
+
+  const dpr=window.devicePixelRatio||1;
+
+  const W=Math.max(300,rect.width);
+  const H=Math.max(240,rect.height);
+
+  canvas.width=W*dpr;
+  canvas.height=H*dpr;
+
+  const ctx=canvas.getContext("2d");
+
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
+  ctx.clearRect(0,0,W,H);
+
+  const people=getChartPeople();
+
+  const styles=getComputedStyle(
+    document.documentElement
+  );
+
+  const text=styles.getPropertyValue(
+    "--muted"
+  ).trim();
+
+  const border=styles.getPropertyValue(
+    "--border"
+  ).trim();
+
+  const surface=styles.getPropertyValue(
+    "--surface"
+  ).trim();
+
+  const maxValue=getChartMaxValue();
+
+  /*
+    Données regroupées par période.
+  */
+  const allData=people.map(person=>({
+    ...person,
+    data:getChartDataForGames(person.games)
+  }));
+
+  const periods=
+    allData[0]?.data?.length||0;
+
+  /*
+    Statistiques générales affichées sous le graphique :
+    elles correspondent à la période choisie pour l'utilisateur.
+  */
+  const currentPeriodGames=
+    getGamesForCurrentChartPeriod(games);
+
+  const values=currentPeriodGames.length
+    ?[getMetricValue(currentPeriodGames)]
+    :[];
+
+  if(chartMetric==="score"){
+
+    const scores=currentPeriodGames.map(
+      calculateFinalScore
+    );
+
+    chartMax.textContent=
+      scores.length?Math.max(...scores):0;
+
+    chartMin.textContent=
+      scores.length?Math.min(...scores):0;
+
+    chartAvg.textContent=
+      scores.length
+        ?Math.round(
+            scores.reduce((a,b)=>a+b,0)/scores.length
+          )
+        :0;
+
+    chartMaxLabel.textContent="Meilleur score";
+    chartMinLabel.textContent="Score le plus bas";
+    chartAvgLabel.textContent="Moyenne";
+
+  }else{
+
+    const value=values[0]??0;
+
+    chartMax.textContent=value+"%";
+    chartMin.textContent=value+"%";
+    chartAvg.textContent=value+"%";
+
+    chartMaxLabel.textContent=
+      chartMetric==="strike"
+        ?"Taux de strikes"
+        :"Taux de spares";
+
+    chartMinLabel.textContent="Période";
+    chartAvgLabel.textContent="Moyenne";
+  }
+
+  if(!periods){
+
+    ctx.fillStyle=text;
+    ctx.font="13px sans-serif";
+    ctx.textAlign="center";
+
+    ctx.fillText(
+      "Pas encore assez de données",
+      W/2,
+      H/2
+    );
+
+    ctx.textAlign="left";
+
+    renderChartLegend(people);
+
+    return;
+  }
+
+  const pad={
+    l:42,
+    r:15,
+    t:20,
+    b:45
+  };
+
+  const cw=W-pad.l-pad.r;
+  const ch=H-pad.t-pad.b;
+
+  /*
+    Grille horizontale.
+  */
+  ctx.font="10px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
+  ctx.strokeStyle=border;
+  ctx.fillStyle=text;
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=4;i++){
+
+    const y=pad.t+(ch*i/4);
+
+    ctx.beginPath();
+    ctx.moveTo(pad.l,y);
+    ctx.lineTo(W-pad.r,y);
+    ctx.stroke();
+
+    const value=Math.round(
+      maxValue-(maxValue*i/4)
+    );
+
+    ctx.fillText(
+      chartMetric==="score"
+        ?value
+        :value+"%",
+      4,
+      y+3
+    );
+  }
+
+  /*
+    Pour plusieurs personnes, les barres sont groupées.
+  */
+  const groupWidth=cw/periods;
+  const peopleCount=people.length;
+
+  const maxBarsPerGroup=Math.min(
+    peopleCount,
+    5
+  );
+
+  const innerWidth=
+    Math.min(
+      groupWidth*.78,
+      groupWidth-6
+    );
+
+  const gap=3;
+
+  const barWidth=Math.max(
+    3,
+    (innerWidth-gap*(peopleCount-1))/peopleCount
+  );
+
+  allData.forEach((person,personIndex)=>{
+
+    person.data.forEach((point,i)=>{
+
+      if(point.value===null){
+        return;
+      }
+
+      const xCenter=
+        pad.l+
+        i*groupWidth+
+        groupWidth/2;
+
+      const groupStart=
+        xCenter-innerWidth/2;
+
+      const x=
+        groupStart+
+        personIndex*(barWidth+gap);
+
+      const barHeight=
+        Math.max(
+          2,
+          point.value/maxValue*ch
+        );
+
+      const y=
+        pad.t+ch-barHeight;
+
+      ctx.fillStyle=person.color;
+
+      const radius=Math.min(
+        5,
+        barWidth/2
+      );
+
+      roundRect(
+        ctx,
+        x,
+        y,
+        barWidth,
+        barHeight,
+        radius
+      );
+
+      ctx.fill();
+
+      /*
+        Valeur au-dessus des barres uniquement lorsque
+        le nombre de périodes reste raisonnable.
+      */
+      if(
+        periods<=12 &&
+        barWidth>=18
+      ){
+
+        ctx.fillStyle=text;
+        ctx.font="9px sans-serif";
+        ctx.textAlign="center";
+
+        ctx.fillText(
+          chartMetric==="score"
+            ?Math.round(point.value)
+            :Math.round(point.value)+"%",
+          x+barWidth/2,
+          Math.max(10,y-4)
+        );
+
+        ctx.textAlign="left";
+      }
+    });
+  });
+
+  /*
+    Labels horizontaux.
+  */
+  ctx.fillStyle=text;
+  ctx.font="10px sans-serif";
+  ctx.textAlign="center";
+
+  allData[0].data.forEach((point,i)=>{
+
+    let show=true;
+
+    if(periods>12){
+      show=
+        i===0 ||
+        i===periods-1 ||
+        i%Math.ceil(periods/6)===0;
+    }
+
+    if(show){
+
+      const x=
+        pad.l+
+        i*groupWidth+
+        groupWidth/2;
+
+      ctx.fillText(
+        point.label,
+        x,
+        H-13
+      );
+    }
+  });
+
+  ctx.textAlign="left";
+
+  renderChartLegend(people);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+
+  if(w<=0||h<=0)return;
+
+  const radius=Math.min(
+    r,
+    w/2,
+    h/2
+  );
+
+  ctx.beginPath();
+
+  ctx.moveTo(x+radius,y);
+  ctx.lineTo(x+w-radius,y);
+
+  ctx.quadraticCurveTo(
+    x+w,
+    y,
+    x+w,
+    y+radius
+  );
+
+  ctx.lineTo(
+    x+w,
+    y+h
+  );
+
+  ctx.lineTo(
+    x,
+    y+h
+  );
+
+  ctx.lineTo(
+    x,
+    y+radius
+  );
+
+  ctx.quadraticCurveTo(
+    x,
+    y,
+    x+radius,
+    y
+  );
+
+  ctx.closePath();
+}
+
+function getGamesForCurrentChartPeriod(list){
+
+  const now=new Date();
+
+  if(chartRange==="week"){
+
+    const start=new Date();
+
+    start.setHours(0,0,0,0);
+    start.setDate(start.getDate()-6);
+
+    const from=todayISO(start);
+    const to=todayISO(now);
+
+    return list.filter(
+      g=>g.date>=from&&g.date<=to
+    );
+  }
+
+  if(chartRange==="month"){
+
+    const start=new Date();
+
+    start.setHours(0,0,0,0);
+    start.setDate(start.getDate()-29);
+
+    const from=todayISO(start);
+    const to=todayISO(now);
+
+    return list.filter(
+      g=>g.date>=from&&g.date<=to
+    );
+  }
+
+  const year=now.getFullYear();
+
+  return list.filter(g=>{
+    const d=dateFromISO(g.date);
+    return d.getFullYear()===year;
+  });
+}
+
+function renderChartLegend(people){
+
+  const legend=document.getElementById(
+    "chartLegend"
+  );
+
+  legend.innerHTML=people.map(person=>`
+    <div class="legend-item">
+      <span
+        class="legend-dot"
+        style="background:${person.color}"
+      ></span>
+
+      <span>
+        ${escapeHTML(person.name)}
+      </span>
+    </div>
+  `).join("");
+
+  const list=document.getElementById(
+    "chartFriendsList"
+  );
+
+  if(!friendGames.length){
+
+    list.innerHTML=`
+      <div class="empty">
+        Aucun ami importé pour le moment.
+        <br>
+        Utilise le bouton
+        <strong>« Comparer un ami »</strong>
+        ci-dessus.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML=`
+    <div class="compare-grid">
+
+      <div class="compare-col">
+
+        <div class="compare-header">
+
+          <div class="compare-header-name">
+            ${escapeHTML(settings.playerName||"Moi")}
+          </div>
+
+        </div>
+
+        ${chartCompareRows(games)}
+
+      </div>
+
+      ${friendGames.map(friend=>`
+
+        <div class="compare-col">
+
+          <div class="compare-header">
+
+            <div class="compare-header-name">
+              ${escapeHTML(friend.name)}
+            </div>
+
+            <button
+              class="compare-remove"
+              title="Retirer ${escapeHTML(friend.name)}"
+              onclick="removeFriend('${friend.id}')"
+            >
+              ×
+            </button>
+
+          </div>
+
+          ${chartCompareRows(friend.games)}
+
+        </div>
+
+      `).join("")}
+
+    </div>
+  `;
+}
+
+function chartCompareRows(list){
+
+  const period=getGamesForCurrentChartPeriod(
+    list
+  );
+
+  return `
+    <div class="compare-row">
+      <span>Parties</span>
+      <strong>${period.length}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Score moyen</span>
+      <strong>${scoreAverage(period)}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Meilleur score</span>
+      <strong>${bestScore(period)}</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Strikes</span>
+      <strong>${strikeRate(period)}%</strong>
+    </div>
+
+    <div class="compare-row">
+      <span>Spares</span>
+      <strong>${spareRate(period)}%</strong>
+    </div>
+  `;
 }
 
 /* ---------- IMPORT / EXPORT ---------- */
 
 function exportData(){
+
   const payload={
     app:"Bowling Tracker",
-    version:1,
+    version:2,
+
+    /*
+      Le nom est volontairement présent à deux endroits :
+      - playerName à la racine
+      - settings.playerName
+      Cela facilite la compatibilité et la lecture du JSON.
+    */
+    playerName:settings.playerName||"Moi",
+
+    settings:{
+      ...settings,
+      playerName:settings.playerName||"Moi"
+    },
+
     exportedAt:new Date().toISOString(),
-    settings,
+
     games
   };
 
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const blob=new Blob(
+    [
+      JSON.stringify(
+        payload,
+        null,
+        2
+      )
+    ],
+    {
+      type:"application/json"
+    }
+  );
+
   const url=URL.createObjectURL(blob);
+
   const a=document.createElement("a");
+
   a.href=url;
-  a.download=`bowling-tracker-${todayISO()}.json`;
+
+  a.download=
+    `bowling-tracker-${todayISO()}.json`;
+
   document.body.appendChild(a);
+
   a.click();
+
   a.remove();
+
   URL.revokeObjectURL(url);
+
   showToast("Données téléchargées");
 }
 
 function importData(event){
+
   const file=event.target.files?.[0];
+
   if(!file)return;
 
   const reader=new FileReader();
+
   reader.onload=()=>{
+
     try{
-      const parsed=JSON.parse(reader.result);
-      const imported=Array.isArray(parsed)?parsed:parsed.games;
-      if(!Array.isArray(imported))throw new Error();
 
-      const valid=imported.filter(g=>g && Array.isArray(g.frames));
-      if(!valid.length)throw new Error();
+      const parsed=JSON.parse(
+        reader.result
+      );
 
-      if(confirm(`Importer ${valid.length} partie(s) ? Cela remplacera les données actuelles.`)){
+      const imported=
+        Array.isArray(parsed)
+          ?parsed
+          :parsed.games;
+
+      if(!Array.isArray(imported)){
+        throw new Error();
+      }
+
+      const valid=imported.filter(
+        g=>g && Array.isArray(g.frames)
+      );
+
+      if(!valid.length){
+        throw new Error();
+      }
+
+      if(confirm(
+        `Importer ${valid.length} partie(s) ? Cela remplacera les données actuelles.`
+      )){
+
         games=valid;
-        const t=Number(parsed.settings?.scoreThreshold);
-        if(Number.isFinite(t)&&t>=0)settings.scoreThreshold=t;
+
+        const t=Number(
+          parsed.settings?.scoreThreshold
+        );
+
+        if(
+          Number.isFinite(t) &&
+          t>=0
+        ){
+          settings.scoreThreshold=t;
+        }
+
+        const importedName=
+          parsed.playerName ||
+          parsed.settings?.playerName;
+
+        if(
+          typeof importedName==="string" &&
+          importedName.trim()
+        ){
+
+          settings.playerName=
+            importedName.trim();
+        }
+
         saveData();
+
         syncSettingsUI();
+
         closeModal("settingsModal");
+
         navigate(currentView);
+
         showToast("Données importées");
       }
+
     }catch(e){
+
       showToast("Fichier JSON invalide");
     }
+
     event.target.value="";
   };
+
   reader.readAsText(file);
-}
-
-/* ---------- DONNÉES DE DÉMO ---------- */
-
-function createDemoGames(){
-  const patterns=[
-    [10,10,9,1,10,8,2,10,9,1,9,1,10,8,2,9,1,8],
-    [9,1,10,8,2,9,1,10,10,8,2,7,3,9,0,10,8,1],
-    [10,9,1,8,2,10,7,3,10,9,1,8,2,10,10,9,1],
-    [8,2,9,1,10,10,8,2,7,3,10,9,1,8,2,9,1,10],
-    [10,10,10,7,3,9,1,8,2,10,9,1,10,8,2,9,1]
-  ];
-
-  const result=[];
-  for(let g=0;g<5;g++){
-    const game=newCurrentGame();
-    const d=new Date();
-    d.setDate(d.getDate()-(g*3+1));
-    game.date=todayISO(d);
-    game.oil=[42,58,65,35,72][g];
-    game.time=["18:30","20:15","19:00","21:10","17:45"][g];
-    game.comment=[
-      "Bonne sensation, piste assez régulière.",
-      "Quelques erreurs de précision sur les spares.",
-      "Très bonne partie, rythme rapide.",
-      "Huile plus sèche en fin de session.",
-      "Meilleur passage de la semaine."
-    ][g];
-
-    let p=0;
-    for(let i=0;i<10;i++){
-      if(i<9){
-        if(patterns[g][p]===10){
-          game.frames[i].rolls=[10];
-          game.frames[i].times=[2.2+g*.04];
-          p++;
-        }else{
-          const a=patterns[g][p++];
-          const b=patterns[g][p++]??0;
-          game.frames[i].rolls=[a,b];
-          game.frames[i].times=[2.4+Math.random()*.5,2.3+Math.random()*.5];
-        }
-      }else{
-        game.frames[i].rolls=[10,9,1];
-        game.frames[i].times=[2.1,2.25,2.3];
-      }
-    }
-    result.push(game);
-  }
-  return result;
 }
 
 /* ---------- INITIALISATION ---------- */
 
 loadData();
-
-try{
-  const storedFriend=JSON.parse(localStorage.getItem("bowling_friend_data")||"null");
-  if(Array.isArray(storedFriend))friendGames=storedFriend;
-}catch(e){}
-
+loadFriends();
 loadTheme();
 syncSettingsUI();
 
 currentGame=newCurrentGame();
 
 window.addEventListener("resize",()=>{
-  if(currentView==="chart")renderChart();
+  if(currentView==="chart"){
+    renderChart();
+  }
 });
 
 document.addEventListener("keydown",e=>{
+
   if(e.key==="Escape"){
-    document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show"));
+
+    document
+      .querySelectorAll(".modal.show")
+      .forEach(m=>{
+        m.classList.remove("show");
+      });
   }
 });
 
