@@ -1200,10 +1200,19 @@ function calculateFinalScore(game){
   return scores[9]??0;
 }
 
-function countStrikes(game){
-  return game.frames.reduce((n,f)=>{
-    return n+(f.rolls[0]===10?1:0);
-  },0);
+function countStrikes(game) {
+  return game.frames.reduce((total, frame, index) => {
+    // Tours 1 à 9 : un strike correspond au premier lancer.
+    if (index < 9) {
+      return total + (frame.rolls[0] === 10 ? 1 : 0);
+    }
+
+    // 10e tour : compter chaque lancer de 10 quilles,
+    // y compris les deuxième et troisième lancers bonus.
+    return total + frame.rolls.filter(
+      roll => roll === 10
+    ).length;
+  }, 0);
 }
 
 function countSpares(game){
@@ -2065,34 +2074,25 @@ function renderScoreTable(){
   document.getElementById("scoreTable").innerHTML=html;
 }
 
-function rollSymbols(f,i){
+function rollSymbols(f, i) {
+  const out = [];
 
-  const out=[];
+  f.rolls.forEach((r, j) => {
+    const prev = f.rolls[j - 1];
 
-  f.rolls.forEach((r,j)=>{
-
-    const prev=f.rolls[j-1];
-
-    if(r===10){
-
+    // Le spare doit être testé avant le strike :
+    // 0 + 10 doit afficher -/
+    if (
+      j > 0 &&
+      prev !== 10 &&
+      prev + r === 10
+    ) {
+      out.push('<span class="r r-s">/</span>');
+    } else if (r === 10) {
+      out.push('<span class="r r-x">X</span>');
+    } else {
       out.push(
-        '<span class="r r-x">X</span>'
-      );
-
-    }else if(
-      j>0 &&
-      prev!==10 &&
-      prev+r===10
-    ){
-
-      out.push(
-        '<span class="r r-s">/</span>'
-      );
-
-    }else{
-
-      out.push(
-        `<span class="r">${r===0?"-":r}</span>`
+        `<span class="r">${r === 0 ? "-" : r}</span>`
       );
     }
   });
@@ -2314,83 +2314,86 @@ function updatePinsFromTemp(){
   }
 }
 
-function validatePins(){
+function validatePins() {
+  const f = currentGame.frames[selectedFrame];
+  const fallen = tempPins.length;
+  const pins = tempPins.slice();
 
-  const f=currentGame.frames[selectedFrame];
-
-  const fallen=tempPins.length;
-  const pins=tempPins.slice();
-
-  function addRoll(count){
-
+  function addRoll(count) {
     f.rolls.push(count);
 
-    f.times=f.times||[];
-
+    f.times = f.times || [];
     f.times.push(getRollTime());
 
     setRollPins(
       f,
-      f.rolls.length-1,
+      f.rolls.length - 1,
       pins
     );
   }
 
-  if(f.rolls.length===0){
-
-    if(fallen===10){
+  // Premier lancer
+  if (f.rolls.length === 0) {
+    if (fallen === 10) {
       setStrike();
       return;
     }
 
     addRoll(fallen);
+  }
 
-  }else if(f.rolls.length===1){
-
-    if(f.rolls[0]===10){
-
-      if(selectedFrame<9){
+  // Deuxième lancer
+  else if (f.rolls.length === 1) {
+    if (f.rolls[0] === 10) {
+      if (selectedFrame < 9) {
         showToast("Ce tour est déjà un strike");
         return;
       }
 
+      // Au 10e tour, le strike donne droit
+      // à deux lancers supplémentaires.
       addRoll(fallen);
-
-    }else{
-
-      if(f.rolls[0]+fallen>10){
-        showToast("Impossible : plus de 10 quilles dans ce tour");
+    } else {
+      if (f.rolls[0] + fallen > 10) {
+        showToast(
+          "Impossible : plus de 10 quilles dans ce tour"
+        );
         return;
       }
 
       addRoll(fallen);
+
+      // Tours 1 à 9 : le deuxième lancer termine
+      // le tour, qu'il s'agisse d'un spare ou non.
+      if (selectedFrame < 9) {
+        selectedFrame++;
+      }
     }
+  }
 
-  }else if(
-    selectedFrame===9 &&
-    f.rolls.length===2
-  ){
+  // Troisième lancer du 10e tour uniquement
+  else if (
+    selectedFrame === 9 &&
+    f.rolls.length === 2
+  ) {
+    const firstTwo = f.rolls[0] + f.rolls[1];
 
-    if(
-      f.rolls[0]===10 ||
-      f.rolls[0]+f.rolls[1]===10
-    ){
+    const bonusAllowed =
+      f.rolls[0] === 10 ||
+      (f.rolls[0] !== 10 && firstTwo === 10);
 
+    if (bonusAllowed) {
       addRoll(fallen);
-
-    }else{
-
+    } else {
       showToast("Le tour est terminé");
       return;
     }
-
-  }else{
-
+  } else {
     showToast("Tour terminé");
     return;
   }
 
-  tempPins=[];
+  tempPins = [];
 
   renderPlay();
 }
