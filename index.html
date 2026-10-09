@@ -333,26 +333,34 @@ canvas{width:100%;height:100%}
 .fg-rolls .r{font-size:14px}
 .fg-rolls .r-x,.fg-rolls .r-s{font-size:18px}
 
-.period-shortcuts{
-  display:flex;
-  gap:7px;
-  overflow:auto;
-  margin-bottom:14px;
+.period-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 14px;
 }
-.period-shortcuts button{
-  flex:0 0 auto;
-  border:1px solid var(--border);
-  background:var(--surface);
-  color:var(--text);
-  border-radius:10px;
-  padding:8px 11px;
-  font-size:11px;
-  font-weight:750;
+
+@media (max-width: 480px) {
+  .period-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-.period-shortcuts button.active{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
+
+.period-shortcuts button {
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 11px;
+  font-size:13px;
+  font-weight: 750;
+}
+
+.period-shortcuts button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .play-date-time{
@@ -534,6 +542,7 @@ canvas{width:100%;height:100%}
     <div class="period-shortcuts">
       <button id="period3Btn" onclick="setPeriodShortcut(3,this)">3 derniers jours</button>
       <button id="period7Btn" onclick="setPeriodShortcut(7,this)">7 derniers jours</button>
+      <button id="period10Btn" onclick="setPeriodShortcut(10,this)">10 derniers jours</button>
       <button id="period30Btn" onclick="setPeriodShortcut(30,this)">30 derniers jours</button>
     </div>
 
@@ -711,7 +720,7 @@ canvas{width:100%;height:100%}
       <input id="playerName" type="text" maxlength="40" placeholder="ex. Thomas" oninput="onPlayerNameInput()">
     </div>
 
-    <div class="card" style="box-shadow:none;margin-bottom:10px">
+    <div class="card" style="box-shadow:none;margin-bottom:10px"> 
       <h3>Thème</h3>
 
       <div class="theme-options">
@@ -726,8 +735,8 @@ canvas{width:100%;height:100%}
         </button>
 
         <button class="theme-option" data-theme="chic" onclick="setTheme('chic')">
-          <div class="theme-preview" style="background:#050505;border:1px solid #c99b35"></div>
-          <div class="theme-name">Chic</div>
+          <div class="theme-preview" style="background:#151f38;border:1px solid #fcfbf9"></div>
+          <div class="theme-name">Glacier</div>
         </button>
       </div>
     </div>
@@ -974,22 +983,26 @@ const themes={
     "--card-hi":"#262d38"
   },
 
-  chic:{
-    "--bg":"#050505",
-    "--surface":"#0d0d0d",
-    "--surface2":"#171717",
-    "--text":"#f2f2f2",
-    "--muted":"#8e8e8e",
-    "--border":"#262626",
-    "--accent":"#d2a842",
-    "--success":"#55b77d",
-    "--danger":"#db5b5b",
-    "--gold":"#d2a842",
-    "--orange":"#f0913a",
-    "--strike":"#e6c05a",
-    "--spare":"#a98bff",
-    "--card-hi":"#1f1f1f"
+  chic: {
+    "--bg": "#070B18",
+    "--surface": "#10182B",
+    "--surface2": "#192540",
+    "--text": "#F2F7FF",
+    "--muted": "#A5B4D0",
+    "--border": "#2D4165",
+
+    "--accent": "#7C83FF",
+    "--success": "#46F6C5",
+    "--danger": "#FF5D7A",
+
+    "--gold": "#FFD166",
+    "--orange": "#FF9F5A",
+    "--strike": "#46F6C5",
+    "--spare": "#7DD3FC",
+
+    "--card-hi": "#223253"
   }
+
 };
 
 function applyTheme(name){
