@@ -25,9 +25,9 @@
   --accent:#1677ff;
   --success:#20a464;
   --danger:#e5484d;
-  --gold:#c99b35;
+  --gold:#e0a21a;
+  --strike:#e69a00;
   --orange:#e8820c;
-  --strike:#b8860b;
   --spare:#7c3aed;
   --card-hi:#ffffff;
   --shadow:0 8px 30px rgba(20,25,35,.08);
@@ -303,7 +303,21 @@ canvas{width:100%;height:100%}
 }
 @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
 .modal-title{font-size:20px;font-weight:900;margin-bottom:15px}
-.modal-close{float:right;border:0;background:var(--surface2);color:var(--text);border-radius:10px;width:35px;height:35px;font-size:22px;line-height:1}
+.modal-close{
+  float:right;
+  position:sticky;
+  top:8px;
+  z-index:10;
+  border:0;
+  background:var(--surface2);
+  color:var(--text);
+  border-radius:10px;
+  width:35px;
+  height:35px;
+  font-size:22px;
+  line-height:1;
+  box-shadow:0 0 0 5px var(--surface);
+}
 .modal-actions{display:flex;gap:8px;margin-top:15px}
 .modal-actions>*{flex:1}
 
@@ -448,6 +462,51 @@ canvas{width:100%;height:100%}
   .score-table th{display:block;height:auto;min-height:62px}
   .rolls{font-size:12px}
 }
+
+/* Tableau de score façon feuille de bowling */
+.bowl-grid{
+  display:grid;grid-template-columns:repeat(9,1fr) 1.5fr;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  background:var(--surface2);margin-bottom:4px
+}
+.pin-mini{zoom:.85}
+.bf{display:flex;flex-direction:column;min-width:0;cursor:pointer;border-right:1px solid var(--border)}
+.bf:last-child{border-right:0}
+.bf-num{
+  text-align:center;
+  font-size:10px;
+  font-weight:850;
+  padding:3px 0;
+  color:var(--text);
+  background:color-mix(in srgb, black 14%, var(--surface2));
+  border-bottom:1px solid var(--border);
+}
+.bf-shots{display:flex;height:28px;border-bottom:1px solid var(--border)}
+.bf-shot{flex:1;min-width:0;display:grid;place-items:center;border-left:1px solid var(--border)}
+.bf-shot:first-child{border-left:0}
+.bf-shots .r{font-size:14px}
+.bf-shots .r-x,.bf-shots .r-s{font-size:17px}
+.bf-total{height:36px;display:grid;place-items:center;font-size:18px;font-weight:900}
+.bf.frame-selected{outline:3px solid var(--accent);outline-offset:-3px}
+
+@media(max-width:560px){
+  .bowl-grid{grid-template-columns:repeat(5,1fr)}
+  .bf{border-bottom:1px solid var(--border)}
+  .bf:nth-child(5n){border-right:0}
+  .bf:nth-child(n+6){border-bottom:0}
+}
+
+/* Bloque le scroll de la page quand une fenêtre est ouverte */
+html:has(.modal.show),
+body:has(.modal.show){
+  overflow:hidden;
+}
+
+/* Évite que le scroll de la fenêtre "déborde" sur la page derrière */
+.modal,
+.modal-box{
+  overscroll-behavior:contain;
+}
 </style>
 </head>
 
@@ -591,7 +650,7 @@ canvas{width:100%;height:100%}
   </div>
 
   <div class="card">
-    <table class="score-table" id="scoreTable"></table>
+    <div class="bowl-grid" id="scoreTable"></div>
 
     <div id="frameEditor" class="frame-edit">
       <div class="selected-title">Sélectionne un tour</div>
@@ -959,9 +1018,9 @@ const themes={
     "--accent":"#1677ff",
     "--success":"#20a464",
     "--danger":"#e5484d",
-    "--gold":"#c99b35",
+    "--gold":"#e0a21a",
+    "--strike":"#e69a00",
     "--orange":"#e8820c",
-    "--strike":"#b8860b",
     "--spare":"#7c3aed",
     "--card-hi":"#ffffff"
   },
@@ -976,9 +1035,9 @@ const themes={
     "--accent":"#4d91ff",
     "--success":"#35c982",
     "--danger":"#ff6268",
-    "--gold":"#d9ad4c",
+    "--gold":"#e0a21a",
+    "--strike":"#e69a00",
     "--orange":"#ff9a3c",
-    "--strike":"#f2c14e",
     "--spare":"#a98bff",
     "--card-hi":"#262d38"
   },
@@ -2045,33 +2104,72 @@ function renderPlay(){
   renderFrameEditor();
 }
 
+function rollCells(f,i){
+  const n = i===9 ? 3 : 2;
+
+  const sym = f.rolls.map((r,j)=>{
+    const prev = f.rolls[j-1];
+    if(j>0 && prev!==10 && prev+r===10){
+      return '<span class="r r-s">/</span>';
+    }
+    if(r===10){
+      return '<span class="r r-x">X</span>';
+    }
+    return `<span class="r">${r===0?"-":r}</span>`;
+  });
+
+  let cells = sym.slice();
+
+  // Tours 1 à 9 : le strike va dans la 2e case, comme sur une vraie feuille
+  if(i<9 && f.rolls[0]===10){
+    cells = ["", sym[0]];
+  }
+
+  while(cells.length<n) cells.push("");
+
+  return cells;
+}
+
+function bowlFramesHTML(frames, scores, onclickFor, selected=-1){
+  return frames.map((f,i)=>`
+    <div class="bf ${i===selected?"frame-selected":""}"
+         onclick="${onclickFor(i)}">
+      <div class="bf-num">${i+1}</div>
+      <div class="bf-shots">
+        ${rollCells(f,i).map(c=>`<div class="bf-shot">${c}</div>`).join("")}
+      </div>
+      <div class="bf-total">${scores[i]??""}</div>
+    </div>
+  `).join("");
+}
+
 function renderScoreTable(){
 
-  const scores=calculateScores(currentGame);
-
-  let html="<thead><tr>";
+  const scores = calculateScores(currentGame);
+  let html = "";
 
   for(let i=0;i<10;i++){
 
-    html+=`
-      <th
-        class="${i===selectedFrame?"frame-selected":""}"
-        onclick="selectFrame(${i})"
-      >
-        <span class="frame-number">${i+1}</span>
+    const f = currentGame.frames[i];
+    const cells = rollCells(f,i);
 
-        ${renderRollText(currentGame.frames[i],i)}
+    html += `
+      <div class="bf ${i===selectedFrame?"frame-selected":""}"
+           onclick="selectFrame(${i})">
 
-        <div class="frame-score">
-          ${scores[i]??""}
+        <div class="bf-num">${i+1}</div>
+
+        <div class="bf-shots">
+          ${cells.map(c=>`<div class="bf-shot">${c}</div>`).join("")}
         </div>
-      </th>
+
+        <div class="bf-total">${scores[i]??""}</div>
+
+      </div>
     `;
   }
 
-  html+="</tr></thead>";
-
-  document.getElementById("scoreTable").innerHTML=html;
+  document.getElementById("scoreTable").innerHTML = html;
 }
 
 function rollSymbols(f, i) {
@@ -2852,17 +2950,6 @@ function openGameDetail(id){
 
   const scores=calculateScores(game);
 
-  const rollHTML=game.frames.map((f,i)=>`
-    <button
-      class="tour-button"
-      onclick="openTourFromHistory('${game.id}',${i})"
-    >
-      <strong>Tour ${i+1}</strong>
-      <span>${f.rolls.length?formatFrameRolls(f,i):"—"}</span>
-      <b>${scores[i]??""}</b>
-    </button>
-  `).join("");
-
   document.getElementById("detailContent").innerHTML=`
 
     <button
@@ -2900,33 +2987,18 @@ function openGameDetail(id){
 
     </div>
 
-    <div class="frame-grid">
-      ${game.frames.map((f,i)=>`
-        <div class="fg-cell">
-
-          <div class="fg-num">
-            ${i+1}
-          </div>
-
-          <div class="fg-rolls">
-            ${formatFrameRolls(f,i)}
-          </div>
-
-          <div class="fg-score">
-            ${scores[i]??""}
-          </div>
-
-        </div>
-      `).join("")}
+    <div class="bowl-grid">
+      ${bowlFramesHTML(
+        game.frames,
+        scores,
+        i=>`openTourFromHistory('${game.id}',${i})`
+      )}
+    </div>
+    <div class="stat-small" style="text-align:center;margin-top:6px">
+      Touche un tour pour voir la position des quilles
     </div>
 
-    <h3 style="margin-top:18px">
-      Détail des tours
-    </h3>
 
-    <div class="tour-list">
-      ${rollHTML}
-    </div>
 
     <div
       class="card"
@@ -2972,66 +3044,101 @@ function formatFrameRolls(f,i){
   return rollSymbols(f,i);
 }
 
-function openTourFromHistory(gameId,frameIndex){
+function pinsDiagram(before, fallen){
+  return `
+    <div class="pin-mini">
+      <div class="pin-layout">
+        ${ALL_PINS.map(n=>{
+          const cls = fallen.includes(n) ? "selected"
+                    : before.includes(n) ? "down" : "";
+          return `<div class="pin ${cls}">${n}</div>`;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
 
-  const game=games.find(g=>g.id===gameId);
+function openTourFromHistory(gameId, frameIndex){
 
-  if(!game)return;
+  const game = games.find(g=>g.id===gameId);
+  if(!game) return;
 
-  const f=game.frames[frameIndex];
+  const f = game.frames[frameIndex];
 
-  const pinsByRoll=[];
+  let down = [];
+  let unknown = 0;
 
-  f.rolls.forEach((r,i)=>{
+  const blocks = f.rolls.map((r,i)=>{
 
-    const label=
-      r===10
-      ?"Strike"
-      :`${r} quille${r>1?"s":""}`;
+    const ps = f.pins && f.pins[i];
+    const before = down.slice();
 
-    pinsByRoll.push(`
-      <div
-        class="card"
-        style="box-shadow:none;background:var(--surface2)"
-      >
+    const label = r===10
+      ? "Strike"
+      : `${r} quille${r>1?"s":""}`;
 
+    let diagram;
+
+    if(ps){
+      down = down.concat(ps);
+
+      const standing = ALL_PINS.filter(n=>!down.includes(n));
+
+      diagram = `
+        ${pinsDiagram(before, ps)}
+        <div class="stat-small" style="text-align:center">
+          Restantes :
+          ${standing.length ? standing.join(", ") : "aucune"}
+        </div>
+      `;
+    }else{
+      unknown += r;
+      diagram = `
+        <div class="stat-small" style="text-align:center;margin:10px 0">
+          Position non enregistrée pour ce lancer
+        </div>
+      `;
+    }
+
+    // nouveau jeu de quilles après un strike / spare
+    if(down.length + unknown >= 10){
+      down = [];
+      unknown = 0;
+    }
+
+    return `
+      <div class="card" style="box-shadow:none;background:var(--surface2)">
         <div class="between">
           <strong>Lancer ${i+1}</strong>
           <span class="chip">${label}</span>
         </div>
 
+        ${diagram}
+
         <div class="stat-small" style="margin-top:6px">
           Temps :
-          ${
-            f.times?.[i]
-              ?Number(f.times[i]).toFixed(2)+" s"
-              :"—"
-          }
+          ${f.times?.[i] ? Number(f.times[i]).toFixed(2)+" s" : "—"}
         </div>
-
       </div>
-    `);
+    `;
   });
 
-  document.getElementById("tourContent").innerHTML=`
+  document.getElementById("tourContent").innerHTML = `
+    <button class="modal-close" onclick="closeModal('tourModal')">×</button>
 
-    <button
-      class="modal-close"
-      onclick="closeModal('tourModal')"
-    >
-      ×
-    </button>
+    <div class="modal-title">Tour ${frameIndex+1}</div>
 
-    <div class="modal-title">
-      Tour ${frameIndex+1}
-    </div>
+    ${
+      f.rolls.length
+        ? `<div class="stat-small" style="margin-bottom:8px">
+             Bleu : tombées à ce lancer • pointillés : déjà tombées • blanc : restantes
+           </div>`
+        : ""
+    }
 
-    ${pinsByRoll.join("")}
+    ${blocks.join("") || '<div class="empty">Aucun lancer dans ce tour.</div>'}
 
-    <button
-      class="btn primary full"
-      onclick="closeModal('tourModal')"
-    >
+    <button class="btn primary full" onclick="closeModal('tourModal')">
       Fermer
     </button>
   `;
