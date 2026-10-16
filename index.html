@@ -484,11 +484,6 @@ canvas{width:100%;height:100%}
     <div id="calendarContent"></div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-value" id="calGames">0</div><div class="stat-small">Parties</div></div>
-    <div class="stat-card"><div class="stat-value" id="calAverage">0</div><div class="stat-small">Score moyen</div></div>
-    <div class="stat-card"><div class="stat-value" id="calBest">0</div><div class="stat-small">Meilleur score</div></div>
-  </div>
 </section>
 
 <!-- PERFORMANCES -->
@@ -540,10 +535,10 @@ canvas{width:100%;height:100%}
 
     <!-- Raccourcis -->
     <div class="period-shortcuts">
-      <button id="period3Btn" onclick="setPeriodShortcut(3,this)">3 derniers jours</button>
-      <button id="period7Btn" onclick="setPeriodShortcut(7,this)">7 derniers jours</button>
-      <button id="period10Btn" onclick="setPeriodShortcut(10,this)">10 derniers jours</button>
-      <button id="period30Btn" onclick="setPeriodShortcut(30,this)">30 derniers jours</button>
+      <button id="period3Btn" onclick="setPeriodShortcut(1,this)">Le jour même</button>
+      <button id="period7Btn" onclick="setPeriodShortcut(3,this)">3 derniers jours</button>
+      <button id="period10Btn" onclick="setPeriodShortcut(7,this)">7 derniers jours</button>
+      <button id="period30Btn" onclick="setPeriodShortcut(14,this)">14 derniers jours</button>
     </div>
 
     <button class="btn primary full" style="margin-bottom:14px" onclick="applyPerfRange()">Afficher cette période</button>
@@ -593,6 +588,15 @@ canvas{width:100%;height:100%}
     </div>
   </div>
 
+  <div class="card">
+    <table class="score-table" id="scoreTable"></table>
+
+    <div id="frameEditor" class="frame-edit">
+      <div class="selected-title">Sélectionne un tour</div>
+      <div class="stat-small">Appuie sur une case du tableau pour modifier ce tour.</div>
+    </div>
+  </div>
+
   <div class="card" style="margin-bottom:13px">
     <div class="row">
       <div class="field" style="margin:0">
@@ -602,15 +606,6 @@ canvas{width:100%;height:100%}
           <span>%</span>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <table class="score-table" id="scoreTable"></table>
-
-    <div id="frameEditor" class="frame-edit">
-      <div class="selected-title">Sélectionne un tour</div>
-      <div class="stat-small">Appuie sur une case du tableau pour modifier ce tour.</div>
     </div>
   </div>
 
@@ -855,6 +850,9 @@ let selectedFrame = 0;
 let editingGameId = null;
 
 let tempPins = [];
+let pinMode = "down";
+let tempLeft = [];
+let tempLeftKey = "";
 let timerRunning = false;
 let timerStart = 0;
 let timerInterval = null;
@@ -2134,6 +2132,14 @@ function renderFrameEditor(){
     n=>!rack.down.includes(n)
   );
 
+  const key = selectedFrame + ":" + f.rolls.length;
+  if (key !== tempLeftKey) { tempLeftKey = key; tempLeft = []; }
+  if (pinMode === "left") {
+    tempPins = ALL_PINS.filter(
+      n => !rack.down.includes(n) && !tempLeft.includes(n)
+    );
+  }
+
   document.getElementById("frameEditor").innerHTML=`
 
     <div class="between">
@@ -2164,6 +2170,11 @@ function renderFrameEditor(){
 
     </div>
 
+    <div class="row" style="margin-top:10px;justify-content:center">
+      <button class="btn ${pinMode==='down'?'primary':''}" onclick="setPinMode('down')">Tombées</button>
+      <button class="btn ${pinMode==='left'?'primary':''}" onclick="setPinMode('left')">Restantes</button>
+    </div>
+
     <div class="pin-layout" id="pinLayout">
 
       ${Array.from({length:10},(_,i)=>`
@@ -2177,7 +2188,7 @@ function renderFrameEditor(){
       `).join("")}
 
       <div class="pin-label">
-        Sélectionne les quilles tombées
+        ${pinMode==="left"?"Sélectionne les quilles restantes":"Sélectionne les quilles tombées"}
       </div>
 
     </div>
@@ -2251,6 +2262,13 @@ function renderFrameEditor(){
   updatePinsFromTemp();
 }
 
+function setPinMode(m){
+  pinMode = m;
+  tempLeft = [];
+  tempPins = [];
+  renderFrameEditor();
+}
+
 function togglePin(n){
 
   const f=currentGame.frames[selectedFrame];
@@ -2259,6 +2277,16 @@ function togglePin(n){
   if(rack.down.includes(n)){
 
     showToast("Cette quille est déjà tombée");
+    return;
+  }
+
+  if (pinMode === "left") {
+    const k = tempLeft.indexOf(n);
+    if (k >= 0) tempLeft.splice(k, 1); else tempLeft.push(n);
+    tempPins = ALL_PINS.filter(
+      p => !rack.down.includes(p) && !tempLeft.includes(p)
+    );
+    updatePinsFromTemp();
     return;
   }
 
@@ -2298,7 +2326,7 @@ function updatePinsFromTemp(){
 
     p.classList.toggle(
       "selected",
-      tempPins.includes(n)
+      pinMode==="left" ? tempLeft.includes(n) : tempPins.includes(n)
     );
 
     p.classList.toggle(
