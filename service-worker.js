@@ -1,4 +1,4 @@
-const CACHE_NAME = "bowling-tracker-v1.2";
+const CACHE_NAME = "bowling-tracker-v1.3"; // ← incrémente à chaque changement de fichier
 
 const ASSETS = [
   "./",
@@ -12,7 +12,13 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_FILES))
+      // cache: "reload" force le téléchargement depuis le réseau,
+      // sans passer par le cache HTTP du navigateur
+      .then((cache) =>
+        cache.addAll(
+          ASSETS.map((url) => new Request(url, { cache: "reload" })),
+        ),
+      )
       .then(() => self.skipWaiting()),
   );
 });
@@ -46,7 +52,6 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
-
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
           return response;
@@ -59,7 +64,23 @@ self.addEventListener("fetch", (event) => {
           );
         }),
     );
+    return;
+  }
 
+  // Sons : réseau d'abord, cache en secours (hors ligne).
+  // Un nouveau fichier du même nom est donc récupéré dès qu'il y a du réseau.
+  if (request.destination === "audio" || request.url.endsWith(".mp3")) {
+    event.respondWith(
+      fetch(request, { cache: "no-cache" })
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
+    );
     return;
   }
 
@@ -71,10 +92,8 @@ self.addEventListener("fetch", (event) => {
       return fetch(request).then((response) => {
         if (response.ok) {
           const copy = response.clone();
-
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
-
         return response;
       });
     }),
