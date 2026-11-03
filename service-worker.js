@@ -4,7 +4,8 @@ const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./sounds/spare.mp3", // ← ajoute
+  "./sounds/spare.mp3",
+  "./sounds/strike.mp3",
 ];
 
 self.addEventListener("install", (event) => {

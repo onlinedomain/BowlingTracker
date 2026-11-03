@@ -2051,8 +2051,15 @@
         letter-spacing: -3px;
         white-space: nowrap;
         color: #fff;
-        -webkit-text-stroke: 3px var(--fx);
         text-shadow:
+          3px 0 0 var(--fx),
+          -3px 0 0 var(--fx),
+          0 3px 0 var(--fx),
+          0 -3px 0 var(--fx),
+          2px 2px 0 var(--fx),
+          -2px 2px 0 var(--fx),
+          2px -2px 0 var(--fx),
+          -2px -2px 0 var(--fx),
           0 0 28px var(--fx),
           0 8px 0 rgba(0, 0, 0, 0.18);
         opacity: 0;
@@ -4429,8 +4436,10 @@
         navigate("history");
       }
 
-      const SWORD_URL = "sounds/spare.mp3";
-      let swordBuffer = null;
+      const SOUNDS = {
+        sword: { url: "sounds/spare.mp3", gain: 1.8, buffer: null },
+        strike: { url: "sounds/strike.mp3", gain: 1.8, buffer: null },
+      };
 
       function getAudioCtx() {
         const AC = window.AudioContext || window.webkitAudioContext;
@@ -4439,44 +4448,56 @@
         return getAudioCtx.ctx;
       }
 
-      // Charge et décode le son une seule fois
-      async function loadSwordSound() {
-        try {
-          const ctx = getAudioCtx();
-          if (!ctx) return;
-          const res = await fetch(SWORD_URL);
-          const data = await res.arrayBuffer();
-          swordBuffer = await ctx.decodeAudioData(data);
-        } catch (e) {
-          swordBuffer = null; // on utilisera le son synthétisé
-        }
+      // Charge et décode tous les sons une seule fois
+      async function loadSounds() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        await Promise.all(
+          Object.values(SOUNDS).map(async (s) => {
+            try {
+              const res = await fetch(s.url);
+              s.buffer = await ctx.decodeAudioData(await res.arrayBuffer());
+            } catch (e) {
+              s.buffer = null;
+            }
+          }),
+        );
       }
 
-      function playSwordSound() {
+      // delay = secondes avant le début du son (programmé précisément par l'horloge audio)
+      function playSound(name, delay = 0) {
         const ctx = getAudioCtx();
-        if (!ctx || !swordBuffer) {
-          playSwordSynth(); // secours si le fichier n'est pas chargé
-          return;
-        }
+        const s = SOUNDS[name];
+        if (!ctx || !s || !s.buffer) return false;
         if (ctx.state === "suspended") ctx.resume();
 
         const src = ctx.createBufferSource();
-        src.buffer = swordBuffer;
+        src.buffer = s.buffer;
 
-        // Gain > 1 + compresseur = son plus massif, sans saturation brutale
         const gain = ctx.createGain();
-        gain.gain.value = 1.8;
+        gain.gain.value = s.gain;
 
         const comp = ctx.createDynamicsCompressor();
         comp.threshold.value = -18;
         comp.ratio.value = 8;
 
         src.connect(gain).connect(comp).connect(ctx.destination);
-        src.start();
+        src.start(ctx.currentTime + delay);
+        return true;
       }
 
-      // Précharge au démarrage, et débloque l'audio au premier toucher (iOS)
-      loadSwordSound();
+      function playSwordSound() {
+        if (!playSound("sword")) playSwordSynth();
+      }
+
+      // Les quilles partent à 0.62 s dans l'animation
+      const STRIKE_SOUND_DELAY = 0.62;
+
+      function playStrikeSound() {
+        playSound("strike", STRIKE_SOUND_DELAY);
+      }
+
+      loadSounds();
       document.addEventListener(
         "pointerdown",
         () => {
@@ -4514,7 +4535,7 @@
         --t:${1 + Math.random() * 0.4}s">🎳</div>`;
           }
           html += '<div class="fx-title">STRIKE!</div>';
-
+          playStrikeSound();
           setTimeout(() => {
             const main = document.querySelector("main");
             main.classList.remove("fx-shake");
