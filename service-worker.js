@@ -1,38 +1,39 @@
-
 const CACHE_NAME = "bowling-tracker-v1.2";
 
-const APP_FILES = [
+const ASSETS = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./sounds/spare.mp3", // ← ajoute
 ];
 
-self.addEventListener("install", event => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_FILES))
-      .then(() => self.skipWaiting())
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_FILES))
+      .then(() => self.skipWaiting()),
   );
 });
 
-self.addEventListener("activate", event => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys()
-      .then(keys =>
+    caches
+      .keys()
+      .then((keys) =>
         Promise.all(
           keys
-            .filter(key =>
-              key.startsWith("bowling-tracker-") &&
-              key !== CACHE_NAME
+            .filter(
+              (key) => key.startsWith("bowling-tracker-") && key !== CACHE_NAME,
             )
-            .map(key => caches.delete(key))
-        )
+            .map((key) => caches.delete(key)),
+        ),
       )
-      .then(() => self.clients.claim())
+      .then(() => self.clients.claim()),
   );
 });
 
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch", (event) => {
   const request = event.request;
 
   if (request.method !== "GET") return;
@@ -41,23 +42,21 @@ self.addEventListener("fetch", event => {
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             const copy = response.clone();
 
-            caches.open(CACHE_NAME)
-              .then(cache => cache.put(request, copy));
-
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
           return response;
         })
         .catch(async () => {
           return (
-            await caches.match(request) ||
-            await caches.match("./index.html") ||
-            await caches.match("./")
+            (await caches.match(request)) ||
+            (await caches.match("./index.html")) ||
+            (await caches.match("./"))
           );
-        })
+        }),
     );
 
     return;
@@ -65,20 +64,18 @@ self.addEventListener("fetch", event => {
 
   // Autres ressources : cache d'abord.
   event.respondWith(
-    caches.match(request)
-      .then(cachedResponse => {
-        if (cachedResponse) return cachedResponse;
+    caches.match(request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
 
-        return fetch(request).then(response => {
-          if (response.ok) {
-            const copy = response.clone();
+      return fetch(request).then((response) => {
+        if (response.ok) {
+          const copy = response.clone();
 
-            caches.open(CACHE_NAME)
-              .then(cache => cache.put(request, copy));
-          }
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        }
 
-          return response;
-        });
-      })
+        return response;
+      });
+    }),
   );
 });
