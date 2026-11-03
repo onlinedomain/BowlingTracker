@@ -1922,7 +1922,9 @@
           #0a1a4d 100%
         );
         box-shadow: 0 0 30px rgba(77, 145, 255, 0.7);
-        animation: fxBall 0.65s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;
+        animation:
+          fxBall 1.3s linear forwards,
+          fxBallCurve 1.3s linear forwards;
       }
       .fx-ball::before,
       .fx-ball::after {
@@ -1941,13 +1943,51 @@
         left: 40px;
       }
       @keyframes fxBall {
+        /* 0 → 0.65 s : la boule file vers le fond (même accélération qu'avant) */
         0% {
           transform: translate(-50%, 0) scale(1.8) rotate(0);
           opacity: 1;
+          animation-timing-function: cubic-bezier(0.5, 0, 0.8, 0.6);
+        }
+        /* 0.65 s : impact, la boule est au centre du texte */
+        50% {
+          transform: translate(-50%, calc(-55vh - 50px)) scale(0.3)
+            rotate(540deg);
+          opacity: 1;
+          animation-timing-function: ease-out;
+        }
+        /* 0.65 → 1.3 s : elle continue derrière les lettres, rétrécit et disparaît */
+        100% {
+          transform: translate(-50%, calc(-62vh - 50px)) scale(0.05)
+            rotate(720deg);
+          opacity: 0;
+        }
+      }
+      /* Trajectoire en courbe : part à droite, revient au centre à l'impact (50 % = 0,65 s) */
+      @keyframes fxBallCurve {
+        0% {
+          translate: 0 0;
+          animation-timing-function: cubic-bezier(
+            0.2,
+            0.6,
+            0.4,
+            1
+          ); /* part vite vers la droite */
+        }
+        24% {
+          translate: min(24vw, 110px) 0; /* point le plus à droite */
+          animation-timing-function: cubic-bezier(
+            0.5,
+            0,
+            0.7,
+            0.4
+          ); /* le crochet se referme */
+        }
+        50% {
+          translate: 0 0; /* impact pile au centre, sous le texte */
         }
         100% {
-          transform: translate(-50%, -52vh) scale(0.3) rotate(540deg);
-          opacity: 1;
+          translate: 0 0;
         }
       }
 
@@ -4542,8 +4582,6 @@
             void main.offsetWidth;
             main.classList.add("fx-shake");
           }, 650);
-
-          if (navigator.vibrate) navigator.vibrate([30, 500, 80, 30, 80]);
         } else {
           layer.style.setProperty("--fd", "0.2s");
           layer.style.setProperty("--td", "0.25s");
@@ -4565,8 +4603,6 @@
           html += '<div class="fx-title">SPARE!</div>';
 
           playSwordSound();
-
-          if (navigator.vibrate) navigator.vibrate(40);
         }
 
         layer.innerHTML = html;
