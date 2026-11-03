@@ -181,6 +181,11 @@
         color: var(--muted);
         margin-top: 4px;
       }
+      .stat-maxscore {
+        font-size: 15px;
+        color: var(--accent);
+        margin-top: 4px;
+      }
 
       .performance-special-stats {
         display: grid;
@@ -3362,39 +3367,12 @@
 
     <div class="between" style="margin-bottom:8px">
 
-      <span class="stat-small">
-        Maximum : <a id="pinCount">${calculateMaxScore(currentGame)}</a>/300
+      <span class="stat-maxscore">
+        <strong> Maximum : <a id="pinCount">${calculateMaxScore(currentGame)}</a>/300</strong>
       </span>
 
       <button class="btn success" onclick="validatePins()">
         ✓ Valider le lancer
-      </button>
-
-    </div>
-
-    <div class="timer-input">
-
-      <div class="field" style="margin:0">
-
-        <label>
-          Temps boule → quilles (secondes)
-        </label>
-
-        <input
-          id="rollTime"
-          type="number"
-          inputmode="decimal"
-          min="0.01"
-          step="0.01"
-          placeholder="ex. 2.35"
-          value="${rollTimeValue}"
-          oninput="rollTimeValue=this.value"
-        >
-
-      </div>
-
-      <button class="btn" id="timerBtn" onclick="startTimer()">
-        ⏱ ${timerRunning ? "Arrêter" : "Chrono"}
       </button>
 
     </div>
@@ -3702,55 +3680,6 @@
         tempPins = [];
 
         renderPlay();
-      }
-
-      function startTimer() {
-        const btn = document.getElementById("timerBtn");
-        const input = document.getElementById("rollTime");
-
-        if (timerRunning) {
-          timerRunning = false;
-
-          clearInterval(timerInterval);
-
-          timerInterval = null;
-
-          rollTimeValue = ((performance.now() - timerStart) / 1000).toFixed(2);
-
-          if (input) {
-            input.value = rollTimeValue;
-          }
-
-          if (btn) {
-            btn.textContent = "⏱ Chrono";
-          }
-
-          return;
-        }
-
-        timerRunning = true;
-
-        timerStart = performance.now();
-
-        rollTimeValue = "";
-
-        if (input) {
-          input.value = "";
-        }
-
-        if (btn) {
-          btn.textContent = "⏱ Arrêter";
-        }
-
-        timerInterval = setInterval(() => {
-          rollTimeValue = ((performance.now() - timerStart) / 1000).toFixed(2);
-
-          const el = document.getElementById("rollTime");
-
-          if (el) {
-            el.value = rollTimeValue;
-          }
-        }, 50);
       }
 
       function saveCurrentGame() {
