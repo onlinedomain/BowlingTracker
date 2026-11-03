@@ -1996,10 +1996,23 @@
         position: absolute;
         left: 50%;
         top: 46%;
-        font-size: var(--s);
         opacity: 0;
         animation: fxPin var(--t) cubic-bezier(0.1, 0.7, 0.3, 1) 0.62s forwards;
+        width: calc(var(--s) * 0.55);
+        height: var(--s);
+        /* Silhouette de quille : tête ronde, cou fin, corps renflé */
+        border-radius: 50% 50% 45% 45% / 32% 32% 68% 68%;
+        background:
+    /* bandes rouges sur le cou */
+          linear-gradient(#e5484d, #e5484d) 0 22% / 100% 9% no-repeat,
+          linear-gradient(#e5484d, #e5484d) 0 34% / 100% 9% no-repeat,
+          /* reflet */
+          linear-gradient(90deg, #fff 0%, #f4f4f4 55%, #cfcfcf 100%);
+        box-shadow:
+          0 0 0 1.5px rgba(0, 0, 0, 0.25),
+          0 4px 10px rgba(0, 0, 0, 0.25);
       }
+
       @keyframes fxPin {
         0% {
           transform: translate(-50%, -50%) scale(0.2) rotate(0);
@@ -4568,11 +4581,11 @@
             const angle = (Math.PI * 2 * i) / 10 + Math.random() * 0.3;
             const dist = 120 + Math.random() * 200;
             html += `<div class="fx-pin" style="
-        --dx:${Math.cos(angle) * dist}px;
-        --dy:${Math.sin(angle) * dist - 40}px;
-        --rot:${Math.random() * 900 - 450}deg;
-        --s:${30 + Math.random() * 18}px;
-        --t:${1 + Math.random() * 0.4}s">🎳</div>`;
+              --dx:${Math.cos(angle) * dist}px;
+              --dy:${Math.sin(angle) * dist - 40}px;
+              --rot:${Math.random() * 900 - 450}deg;
+              --s:${30 + Math.random() * 18}px;
+              --t:${1 + Math.random() * 0.4}s"></div>`;
           }
           html += '<div class="fx-title">STRIKE!</div>';
           playStrikeSound();
