@@ -4238,6 +4238,8 @@
         const fallen = tempPins.length;
         const pins = tempPins.slice();
 
+        const switchBack = pinMode === "left" && tempLeft.length > 0;
+
         function addRoll(count) {
           f.rolls.push(count);
 
@@ -4305,6 +4307,11 @@
         } else {
           showToast("Tour terminé");
           return;
+        }
+
+        if (switchBack) {
+          pinMode = "down";
+          tempLeft = [];
         }
 
         tempPins = [];
