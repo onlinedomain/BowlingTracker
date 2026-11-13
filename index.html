@@ -4239,6 +4239,7 @@
         const pins = tempPins.slice();
 
         const switchBack = pinMode === "left" && tempLeft.length > 0;
+        let frameChanged = false; // ← nouveau
 
         function addRoll(count) {
           f.rolls.push(count);
@@ -4258,6 +4259,14 @@
         if (f.rolls.length === 0) {
           if (fallen === 10) {
             setStrike();
+            // Si setStrike() ne change pas de case lui-même, décommente :
+            // if (selectedFrame < 9) { selectedFrame++; }
+            // Et dans tous les cas, au changement de case :
+            if (selectedFrame < 9) {
+              pinMode = "left";
+              tempLeft = [];
+              tempPins = [];
+            }
             return;
           }
 
@@ -4272,8 +4281,6 @@
               return;
             }
 
-            // Au 10e tour, le strike donne droit
-            // à deux lancers supplémentaires.
             addRoll(fallen);
           } else {
             if (f.rolls[0] + fallen > 10) {
@@ -4283,10 +4290,9 @@
 
             addRoll(fallen);
 
-            // Tours 1 à 9 : le deuxième lancer termine
-            // le tour, qu'il s'agisse d'un spare ou non.
             if (selectedFrame < 9) {
               selectedFrame++;
+              frameChanged = true; // ← nouveau
             }
           }
         }
@@ -4309,7 +4315,11 @@
           return;
         }
 
-        if (switchBack) {
+        if (frameChanged) {
+          // Nouvelle case : on repart sur le mode "left"
+          pinMode = "left";
+          tempLeft = [];
+        } else if (switchBack) {
           pinMode = "down";
           tempLeft = [];
         }
