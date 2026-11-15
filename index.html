@@ -4060,14 +4060,15 @@
           tempLeftKey = key;
           tempLeft = [];
         }
+
         if (pinMode === "left") {
           tempPins = ALL_PINS.filter(
             (n) => !rack.down.includes(n) && !tempLeft.includes(n),
           );
         }
-
+        
         document.getElementById("frameEditor").innerHTML = `
-
+        
     <div class="between">
 
       <div class="selected-title">
@@ -4101,7 +4102,7 @@
       <button class="btn ${pinMode === "left" ? "primary" : ""}" onclick="setPinMode('left')">Restantes</button>
     </div>
 
-    <div class="pin-layout ${pinMode === "down" ? "mode-left" : ""}" id="pinLayout">
+    <div class="pin-layout ${pinMode === "left" ? "mode-left" : ""}" id="pinLayout">
 
       ${Array.from(
         { length: 10 },
@@ -4173,6 +4174,8 @@
         tempPins = [];
         renderFrameEditor();
       }
+
+      setPinMode("left");
 
       function togglePin(n) {
         const f = currentGame.frames[selectedFrame];
