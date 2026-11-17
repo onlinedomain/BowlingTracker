@@ -2228,6 +2228,23 @@
             </div>
 
             <div id="calendarContent"></div>
+
+            <div
+              style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;text-align:center"
+            >
+              <div>
+                <div class="stat-value" id="calGames">0</div>
+                <div class="stat-small">Parties du mois</div>
+              </div>
+              <div>
+                <div class="stat-value" id="calAverage">0</div>
+                <div class="stat-small">Moyenne</div>
+              </div>
+              <div>
+                <div class="stat-value" id="calBest">0</div>
+                <div class="stat-small">Meilleur</div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -2792,7 +2809,7 @@
       let editingGameId = null;
 
       let tempPins = [];
-      let pinMode = "down";
+      let pinMode = "left";
       let tempLeft = [];
       let tempLeftKey = "";
       let timerRunning = false;
@@ -2996,7 +3013,13 @@
 
         if (view === "calendar") renderCalendar();
         if (view === "performance") renderPerformance();
-        if (view === "play") renderPlay();
+        if (view === "play") {
+          pinMode = "left";
+          tempLeft = [];
+          tempPins = [];
+          tempLeftKey = "";
+          renderPlay();
+        }
         if (view === "chart") renderChart();
         if (view === "history") renderHistory();
 
@@ -3032,6 +3055,15 @@
       }
 
       const ALL_PINS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+      // Le lancer j du tour f est-il un spare ?
+      // (2e lancer après un non-strike, ou 3e lancer du 10e tour après X + non-strike)
+      function isSpareAt(f, j) {
+        const r = f.rolls;
+        if (j === 1) return r[0] !== 10 && r[0] + r[1] === 10;
+        if (j === 2) return r[0] === 10 && r[1] !== 10 && r[1] + r[2] === 10;
+        return false;
+      }
 
       function rackState(f) {
         let down = [],
@@ -3085,10 +3117,13 @@
         return frame && frame.rolls[0] === 10;
       }
 
-      function calculateScores(game) {
+      // strict = true : un tour n'affiche son score que lorsque les lancers
+      // bonus nécessaires sont connus (affichage). Sinon : score provisoire.
+      function calculateScores(game, strict = false) {
         const f = game.frames;
         const scores = [];
         let total = 0;
+        let pending = false;
 
         const all = [];
 
@@ -3102,7 +3137,16 @@
           const rolls = f[i].rolls;
 
           if (i === 9) {
-            if (!rolls.length) {
+            if (!rolls.length || pending) {
+              scores[i] = null;
+              break;
+            }
+
+            const complete =
+              rolls.length === 3 ||
+              (rolls.length === 2 && rolls[0] !== 10 && rolls[0] + rolls[1] < 10);
+
+            if (strict && !complete) {
               scores[i] = null;
               break;
             }
@@ -3113,6 +3157,13 @@
           }
 
           if (rolls[0] === 10) {
+            if (strict && (pending || all[pos + 2] === undefined)) {
+              pending = true;
+              scores[i] = null;
+              pos += 1;
+              continue;
+            }
+
             const bonus1 = all[pos + 1] ?? 0;
             const bonus2 = all[pos + 2] ?? 0;
 
@@ -3120,12 +3171,25 @@
             scores[i] = total;
             pos += 1;
           } else if (rolls.length >= 2 && rolls[0] + rolls[1] === 10) {
+            if (strict && (pending || all[pos + 2] === undefined)) {
+              pending = true;
+              scores[i] = null;
+              pos += 2;
+              continue;
+            }
+
             const bonus = all[pos + 2] ?? 0;
 
             total += 10 + bonus;
             scores[i] = total;
             pos += 2;
           } else if (rolls.length >= 2) {
+            if (strict && pending) {
+              scores[i] = null;
+              pos += 2;
+              continue;
+            }
+
             total += rolls[0] + rolls[1];
             scores[i] = total;
             pos += 2;
@@ -3158,14 +3222,7 @@
 
       function countSpares(game) {
         return game.frames.reduce((n, f) => {
-          return (
-            n +
-            (f.rolls.length >= 2 &&
-            f.rolls[0] !== 10 &&
-            f.rolls[0] + f.rolls[1] === 10
-              ? 1
-              : 0)
-          );
+          return n + (isSpareAt(f, 1) || isSpareAt(f, 2) ? 1 : 0);
         }, 0);
       }
 
@@ -3306,9 +3363,9 @@
           );
         });
 
-        calGames.textContent = monthGames.length;
-        calAverage.textContent = scoreAverage(monthGames) || 0;
-        calBest.textContent = bestScore(monthGames) || 0;
+        setText("calGames", monthGames.length);
+        setText("calAverage", scoreAverage(monthGames) || 0);
+        setText("calBest", bestScore(monthGames) || 0);
       }
 
       function startOfWeek(d) {
@@ -3814,6 +3871,10 @@
 
         selectedFrame = 0;
         editingGameId = null;
+        pinMode = "left";
+        tempLeft = [];
+        tempPins = [];
+        tempLeftKey = "";
 
         renderPlay();
       }
@@ -3938,8 +3999,7 @@
         const n = i === 9 ? 3 : 2;
 
         const sym = f.rolls.map((r, j) => {
-          const prev = f.rolls[j - 1];
-          if (j > 0 && prev !== 10 && prev + r === 10) {
+          if (isSpareAt(f, j)) {
             return '<span class="r r-s">/</span>';
           }
           if (r === 10) {
@@ -3980,7 +4040,7 @@
       }
 
       function renderScoreTable() {
-        const scores = calculateScores(currentGame);
+        const scores = calculateScores(currentGame, true);
         let html = "";
 
         for (let i = 0; i < 10; i++) {
@@ -4010,11 +4070,9 @@
         const out = [];
 
         f.rolls.forEach((r, j) => {
-          const prev = f.rolls[j - 1];
-
           // Le spare doit être testé avant le strike :
           // 0 + 10 doit afficher -/
-          if (j > 0 && prev !== 10 && prev + r === 10) {
+          if (isSpareAt(f, j)) {
             out.push('<span class="r r-s">/</span>');
           } else if (r === 10) {
             out.push('<span class="r r-x">X</span>');
@@ -4040,6 +4098,9 @@
 
       function selectFrame(i) {
         selectedFrame = i;
+        tempPins = [];
+        tempLeft = [];
+        tempLeftKey = "";
 
         renderScoreTable();
         renderFrameEditor();
@@ -4151,7 +4212,7 @@
                 (r, i) => `
               <div class="chip">
                 Lancer ${i + 1}:
-                ${r === 10 ? "Strike" : r}
+                ${isSpareAt(f, i) ? "Spare (" + r + ")" : r === 10 ? "Strike" : r}
               </div>
             `,
               )
@@ -4175,7 +4236,6 @@
         renderFrameEditor();
       }
 
-      setPinMode("left");
 
       function togglePin(n) {
         const f = currentGame.frames[selectedFrame];
@@ -4242,7 +4302,15 @@
         const pins = tempPins.slice();
 
         const switchBack = pinMode === "left" && tempLeft.length > 0;
-        let frameChanged = false; // ← nouveau
+        let frameChanged = false;
+        let celebration = null;
+
+        // On ne peut pas faire tomber plus de quilles qu'il n'en reste
+        const rackNow = rackState(f);
+        if (rackNow.down.length + rackNow.unknown + fallen > 10) {
+          showToast("Impossible : plus de 10 quilles sur ce jeu");
+          return;
+        }
 
         function addRoll(count) {
           f.rolls.push(count);
@@ -4252,24 +4320,21 @@
 
           setRollPins(f, f.rolls.length - 1, pins);
 
-          const prev = f.rolls[f.rolls.length - 2];
-          if (count === 10) celebrate("strike");
-          else if (f.rolls.length >= 2 && prev !== 10 && prev + count === 10)
-            celebrate("spare");
+          const j = f.rolls.length - 1;
+          if (isSpareAt(f, j)) celebration = "spare";
+          else if (count === 10) celebration = "strike";
         }
 
         // Premier lancer
         if (f.rolls.length === 0) {
           if (fallen === 10) {
-            setStrike();
-            // Si setStrike() ne change pas de case lui-même, décommente :
-            // if (selectedFrame < 9) { selectedFrame++; }
-            // Et dans tous les cas, au changement de case :
+            // Après un strike (tours 1 à 9) on passe au tour suivant en "Restantes"
             if (selectedFrame < 9) {
               pinMode = "left";
               tempLeft = [];
-              tempPins = [];
+              tempLeftKey = "";
             }
+            setStrike();
             return;
           }
 
@@ -4330,6 +4395,8 @@
         tempPins = [];
 
         renderPlay();
+
+        if (celebration) celebrate(celebration);
       }
 
       function getRollTime() {
@@ -4368,6 +4435,16 @@
         } else if (f.rolls.length < 3) {
           const rack = rackState(f);
 
+          if (
+            f.rolls.length === 2 &&
+            f.rolls[0] !== 10 &&
+            f.rolls[0] + f.rolls[1] < 10
+          ) {
+            showToast("Le tour est terminé");
+
+            return;
+          }
+
           if (rack.down.length + rack.unknown > 0) {
             showToast("Des quilles sont déjà tombées : utilise les quilles");
 
@@ -4381,11 +4458,17 @@
           f.times.push(getRollTime());
 
           setRollPins(f, f.rolls.length - 1, ALL_PINS.slice());
+        } else {
+          showToast("Tour terminé");
+
+          return;
         }
-        celebrate("strike");
+
         tempPins = [];
 
         renderPlay();
+
+        celebrate("strike");
       }
 
       function remainingPins(f) {
@@ -4410,6 +4493,26 @@
             f.times.push(getRollTime());
 
             setRollPins(f, 1, remainingPins(f));
+          } else if (
+            f.rolls.length === 2 &&
+            f.rolls[0] === 10 &&
+            f.rolls[1] !== 10
+          ) {
+            const down = rackState(f).down;
+
+            f.rolls.push(10 - f.rolls[1]);
+
+            f.times = f.times || [];
+
+            f.times.push(getRollTime());
+
+            setRollPins(
+              f,
+              2,
+              rackState({ rolls: f.rolls.slice(0, 2), pins: f.pins }).unknown
+                ? null
+                : ALL_PINS.filter((n) => !down.includes(n)),
+            );
           } else {
             showToast("Spare impossible dans cet état");
 
@@ -4444,6 +4547,7 @@
 
           selectedFrame = Math.min(9, selectedFrame + 1);
 
+          tempPins = [];
           renderPlay();
 
           showToast("Spare ✓");
@@ -4452,8 +4556,9 @@
         }
 
         currentGame.frames[selectedFrame] = f;
-        celebrate("spare");
+        tempPins = [];
         renderPlay();
+        celebrate("spare");
       }
 
       function clearFrame() {
@@ -4559,15 +4664,47 @@
         return true;
       }
 
+      // Son de secours (synthétisé) si spare.mp3 n'est pas disponible
+      function playSwordSynth() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+
+        try {
+          if (ctx.state === "suspended") ctx.resume();
+
+          const t = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(1800, t);
+          osc.frequency.exponentialRampToValueAtTime(400, t + 0.18);
+
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+
+          osc.connect(g).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.25);
+        } catch (e) {
+          /* le son ne doit jamais bloquer le jeu */
+        }
+      }
+
       function playSwordSound() {
-        if (!playSound("sword")) playSwordSynth();
+        try {
+          if (!playSound("sword")) playSwordSynth();
+        } catch (e) {}
       }
 
       // Les quilles partent à 0.15 s dans l'animation
       const STRIKE_SOUND_DELAY = 0.15;
 
       function playStrikeSound() {
-        playSound("strike", STRIKE_SOUND_DELAY);
+        try {
+          playSound("strike", STRIKE_SOUND_DELAY);
+        } catch (e) {}
       }
 
       loadSounds();
@@ -4611,6 +4748,7 @@
           playStrikeSound();
           setTimeout(() => {
             const main = document.querySelector("main");
+            if (!main) return;
             main.classList.remove("fx-shake");
             void main.offsetWidth;
             main.classList.add("fx-shake");
@@ -4743,7 +4881,7 @@
 
         if (!game) return;
 
-        const scores = calculateScores(game);
+        const scores = calculateScores(game, true);
 
         document.getElementById("detailContent").innerHTML = `
 
